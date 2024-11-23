@@ -25,7 +25,10 @@ export default function WalletAnalyzer() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { theme } = useTheme(); // Access the current theme
-
+  const isValidSolanaAddress = (address: string) => {
+    const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; // Solana addresses regex
+    return base58Regex.test(address);
+  };
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!address) return;
@@ -51,8 +54,12 @@ export default function WalletAnalyzer() {
         overall: "sus",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
-          donor: ["5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw"],
-          criminal: ["3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2"],
+          donor: [
+            "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw",
+          ],
+          criminal: [
+            "3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2",
+          ],
         },
         walletAddress: address, // Include the current address
       };
@@ -84,33 +91,42 @@ export default function WalletAnalyzer() {
       <main className="w-full max-w-4xl mx-auto">
         {/* Form for analysis */}
         <form onSubmit={handleSubmit} className="mb-8">
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="Enter Solana wallet address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className={`${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
-                  : "bg-white/10 border-white/20 placeholder-white/50 text-white"
-              } flex-grow`}
-            />
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className={`${
-                isDarkTheme
-                  ? "bg-gray-300 text-gray-900 hover:bg-gray-400"
-                  : "bg-white text-purple-700 hover:bg-white/90"
-              }`}
-            >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                "Analyze"
-              )}
-            </Button>
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="Enter Solana wallet address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className={`${
+                  isDarkTheme
+                    ? "bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                    : "bg-white/10 border-white/20 placeholder-white/50 text-white"
+                } flex-grow`}
+              />
+              <Button
+                type="submit"
+                disabled={isLoading || !isValidSolanaAddress(address)}
+                className={`${
+                  isDarkTheme
+                    ? "bg-gray-300 text-gray-900 hover:bg-gray-400"
+                    : "bg-white text-purple-700 hover:bg-white/90"
+                }`}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Analyze"
+                )}
+              </Button>
+            </div>
+
+            {/* Validation Message */}
+            {!isValidSolanaAddress(address) && address.length > 0 && (
+              <p className="text-red-500 text-sm">
+                Please enter a valid Solana wallet address.
+              </p>
+            )}
           </div>
         </form>
 

@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ExclamationCircleIcon } from "@heroicons/react/outline"; // Report icon
+import { XIcon } from "lucide-react";
 // @ts-ignore
 import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
 import { address } from "framer-motion/client";
@@ -69,12 +71,14 @@ export default function AnalysisCard({
       analysis.overall.toLowerCase() === "good"
         ? "This guy is legit! 🚀"
         : "ALERT! Suspicious wallet! 🚨";
-  
-    const shareText = `${message} Check out this wallet analysis by Solaura for ${"https://solscan.io/account/"+walletAddress} 🔍 #Solana #Solaura`;
+
+    const shareText = `${message} Check out this wallet analysis by Solaura for ${
+      "https://solscan.io/account/" + walletAddress
+    } 🔍 #Solana #Solaura`;
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       shareText
     )}`;
-  
+
     window.open(shareUrl, "_blank");
   };
   return (
@@ -157,9 +161,7 @@ export default function AnalysisCard({
                         className="hover:underline flex items-center"
                       >
                         <LinkIcon className="w-4 h-4 inline mr-1" />
-                        {
-                          hash
-                        }
+                        {hash}
                       </a>
                       <ClipboardCopyIcon
                         onClick={() => handleCopy()}
@@ -172,25 +174,35 @@ export default function AnalysisCard({
             );
           })}
         </div>
-                {/* Action Buttons */}
-                <div className="mt-6 flex flex-wrap gap-4">
+        {/* Action Buttons */}
+        <div className="mt-6 flex flex-wrap gap-4 justify-end">
+          {/* Mint NFT Button */}
           <button
             onClick={handleMintNFT}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
+            <ClipboardCopyIcon className="w-5 h-5" />
             Mint NFT from this Analysis
           </button>
-          <button
-            onClick={handleReportOnChain}
-            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-          >
-            Report on Chain
-          </button>
+
+          {/* Conditionally render Report button */}
+          {analysis.overall.toLowerCase() !== "good" && (
+            <button
+              onClick={handleReportOnChain}
+              className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+            >
+              <ExclamationCircleIcon className="w-5 h-5" />
+              Report on Chain
+            </button>
+          )}
+
+          {/* Share to Twitter Button */}
           <button
             onClick={handleShareToTwitter}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            className="flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800"
           >
-            Share to Twitter
+            Share to
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
       </CardContent>
