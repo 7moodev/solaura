@@ -17,7 +17,6 @@ type AnalysisType = {
     [key: string]: string[]; // For dynamic categories
   };
   walletAddress: string;
-
 };
 
 export default function WalletAnalyzer() {
@@ -30,26 +29,26 @@ export default function WalletAnalyzer() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!address) return;
-  
+
     setIsLoading(true);
-  
+
     try {
       const response = await fetch(
         `http://localhost:5000/?wallet-address=${encodeURIComponent(address)}`
       );
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-  
+
       const data: AnalysisType = await response.json();
       setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]); // Add walletAddress to each entry
     } catch (error) {
       console.error("Failed to fetch analysis:", error);
-  
+
       // Add a dummy fallback entry
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "Unknown",
+        overall: "good",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
           donor: ["0x123abc"],
@@ -117,25 +116,24 @@ export default function WalletAnalyzer() {
 
         {/* Render Analysis Cards */}
         <AnimatePresence>
-  {analysis.map((entry, index) => (
-    <motion.div
-      key={index}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5 }}
-      className="mb-6"
-    >
-      <AnalysisCard
-        analysis={entry}
-        walletAddress={entry.walletAddress} 
-        isDarkTheme={isDarkTheme}
-      />
-    </motion.div>
-  ))}
-</AnimatePresence>
+          {analysis.map((entry, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6"
+            >
+              <AnalysisCard
+                analysis={entry}
+                walletAddress={entry.walletAddress}
+                isDarkTheme={isDarkTheme}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </main>
     </div>
   );
 }
-

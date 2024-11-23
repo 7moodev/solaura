@@ -1,7 +1,14 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // @ts-ignore
-import { ClipboardCopyIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
+import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
+import { address } from "framer-motion/client";
 
 type AnalysisType = {
   overall: string;
@@ -13,6 +20,11 @@ type AnalysisType = {
   };
 };
 
+const badgeStyles: { [key: string]: string } = {
+  Good: "bg-green-500 text-white",
+  Suspicious: "bg-orange-500 text-white",
+  Neutral: "bg-gray-500 text-white",
+};
 const flagStyles: { [key: string]: string } = {
   donor: "bg-green-100 text-green-800 border-green-300",
   criminal: "bg-red-100 text-red-800 border-red-300",
@@ -21,7 +33,11 @@ const flagStyles: { [key: string]: string } = {
   rugger: "bg-orange-100 text-orange-800 border-orange-300",
   trader: "bg-purple-100 text-purple-800 border-purple-300",
 };
-
+const getBadgeStyle = (flag: string) => {
+  if (flag === "good") return badgeStyles.Good;
+  if (flag === "suspicious") return badgeStyles.Suspicious;
+  if (flag === "neutral") return badgeStyles.Neutral;
+};
 export default function AnalysisCard({
   analysis,
   walletAddress,
@@ -31,6 +47,8 @@ export default function AnalysisCard({
   walletAddress: string;
   isDarkTheme: boolean;
 }) {
+  const explorerLink = (hash: string) => `https://solscan.io/tx/`;
+
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress).then(() => {
       alert("Wallet address copied to clipboard!"); // Optionally provide user feedback
@@ -51,7 +69,9 @@ export default function AnalysisCard({
           <Badge
             key={index}
             variant="outline"
-            className={`px-3 py-1 text-sm ${flagStyles[flag] || "bg-gray-100 text-gray-800 border-gray-300"}`}
+            className={`px-3 py-1 text-sm ${
+              flagStyles[flag] || "bg-gray-100 text-gray-800 border-gray-300"
+            }`}
           >
             {flag}
           </Badge>
@@ -60,17 +80,17 @@ export default function AnalysisCard({
 
       {/* Card Content */}
       <CardHeader>
-        <CardTitle className="text-2xl">
-          Wallet Analysis of
-          <span className="ml-2 inline-flex items-center">
-            <span className="font-mono">{walletAddress}</span>
-            <ClipboardCopyIcon
-              onClick={handleCopy}
-              className="w-5 h-5 ml-2 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
-            />
+        <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
+        <div className="mt-2 flex items-center gap-2">
+          <span className="font-mono text-lg text-gray-300">
+            {walletAddress}
           </span>
-        </CardTitle>
-        <CardDescription className="text-white/70">
+          <ClipboardCopyIcon
+            onClick={() => handleCopy()}
+            className="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-300"
+          />
+        </div>
+        <CardDescription className="text-white/70 mt-4">
           Results based on past activities
         </CardDescription>
       </CardHeader>
@@ -78,28 +98,54 @@ export default function AnalysisCard({
         <div className="grid gap-4">
           {/* Overall Section */}
           <div className="flex justify-between items-center">
-            <span className="text-lg">Overall:</span>
-            <Badge
-              variant="outline"
-              className={`text-lg px-3 py-1 ${
-                isDarkTheme ? "bg-gray-700 text-gray-300" : ""
+            <span className="text-lg font-semibold">Overall:</span>
+            <div
+              className={`w-20 h-20 flex items-center justify-center rounded-md font-bold text-lg ${
+                analysis.overall === "good"
+                  ? badgeStyles.Good
+                  : badgeStyles.Suspicious
               }`}
             >
-              {analysis.overall}
-            </Badge>
+              {analysis.overall.toUpperCase()}
+            </div>
           </div>
 
           {/* Hashes Section */}
-          {Object.keys(analysis.analysis).map((category) => {
-            if (category === "flags") return null; // Skip the flags array
+
+          {Object.entries(analysis.analysis).map(([key, hashes]) => {
+            // Skip "flags" as it's not a hash type
+            if (key === "flags") return null;
+
             return (
-              <div key={category}>
-                <h3 className="text-lg mb-2 capitalize">{category} Hashes:</h3>
-                <ul className="list-disc list-inside">
-                  {analysis.analysis[category].map((hash, index) => (
-                    <li key={index}>{hash}</li>
+              <div key={key}>
+                <h3 className="text-lg mb-2 capitalize">{key} TrX:</h3>
+                <div className="flex flex-wrap gap-2">
+                  {hashes.map((hash, index) => (
+                    <Badge
+                      key={index}
+                      className={`flex items-center gap-2 px-3 py-2 ${
+                        flagStyles[key] ||
+                        "bg-gray-100 text-gray-800 border-gray-300"
+                      }`}
+                    >
+                      <a
+                        href={explorerLink(hash)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline flex items-center"
+                      >
+                        <LinkIcon className="w-4 h-4 inline mr-1" />
+                        {
+                          "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw"
+                        }
+                      </a>
+                      <ClipboardCopyIcon
+                        onClick={() => handleCopy()}
+                        className="w-4 h-4 cursor-pointer hover:text-opacity-80"
+                      />
+                    </Badge>
                   ))}
-                </ul>
+                </div>
               </div>
             );
           })}
