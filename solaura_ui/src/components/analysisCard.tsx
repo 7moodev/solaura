@@ -47,14 +47,36 @@ export default function AnalysisCard({
   walletAddress: string;
   isDarkTheme: boolean;
 }) {
-  const explorerLink = (hash: string) => `https://solscan.io/tx/`;
+  const explorerLink = (hash: string) => `https://solscan.io/tx/${hash}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress).then(() => {
       alert("Wallet address copied to clipboard!"); // Optionally provide user feedback
     });
   };
+  const handleMintNFT = () => {
+    // Simulated wallet connection and NFT minting preparation logic
+    alert("Minting NFT: Open wallet to sign transaction.");
+  };
 
+  const handleReportOnChain = () => {
+    // Placeholder logic for reporting on chain
+    alert("Reported on-chain (dummy functionality).");
+  };
+
+  const handleShareToTwitter = () => {
+    const message =
+      analysis.overall.toLowerCase() === "good"
+        ? "This guy is legit! 🚀"
+        : "ALERT! Suspicious wallet! 🚨";
+  
+    const shareText = `${message} Check out this wallet analysis by Solaura for ${"https://solscan.io/account/"+walletAddress} 🔍 #Solana #Solaura`;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}`;
+  
+    window.open(shareUrl, "_blank");
+  };
   return (
     <Card
       className={`relative ${
@@ -136,7 +158,7 @@ export default function AnalysisCard({
                       >
                         <LinkIcon className="w-4 h-4 inline mr-1" />
                         {
-                          "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw"
+                          hash
                         }
                       </a>
                       <ClipboardCopyIcon
@@ -149,6 +171,27 @@ export default function AnalysisCard({
               </div>
             );
           })}
+        </div>
+                {/* Action Buttons */}
+                <div className="mt-6 flex flex-wrap gap-4">
+          <button
+            onClick={handleMintNFT}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            Mint NFT from this Analysis
+          </button>
+          <button
+            onClick={handleReportOnChain}
+            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+          >
+            Report on Chain
+          </button>
+          <button
+            onClick={handleShareToTwitter}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Share to Twitter
+          </button>
         </div>
       </CardContent>
     </Card>

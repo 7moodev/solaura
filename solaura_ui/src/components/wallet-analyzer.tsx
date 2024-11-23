@@ -48,11 +48,11 @@ export default function WalletAnalyzer() {
 
       // Add a dummy fallback entry
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "good",
+        overall: "sus",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
-          donor: ["0x123abc"],
-          criminal: ["0x456def"],
+          donor: ["5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw"],
+          criminal: ["3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2"],
         },
         walletAddress: address, // Include the current address
       };
