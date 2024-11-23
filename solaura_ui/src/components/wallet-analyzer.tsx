@@ -51,7 +51,7 @@ export default function WalletAnalyzer() {
 
       // Add a dummy fallback entry
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "good",
+        overall: "sus",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
           donor: [
@@ -75,8 +75,8 @@ export default function WalletAnalyzer() {
     <div
       className={`min-h-screen w-full p-8 ${
         isDarkTheme
-          ? "bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
-          : "bg-gradient-to-br from-purple-700 via-violet-600 to-indigo-800 text-white"
+          ? "bg-gradient-to-br from-gray-600 via-black to-gray-800 text-white"
+          : "bg-gradient-to-br from-blue-600 via-violet-400 to-indigo-800 text-white"
       }`}
     >
       <header className="text-center mb-12">
