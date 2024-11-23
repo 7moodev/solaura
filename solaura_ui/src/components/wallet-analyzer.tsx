@@ -16,6 +16,8 @@ type AnalysisType = {
     criminal: string[];
     [key: string]: string[]; // For dynamic categories
   };
+  walletAddress: string;
+
 };
 
 export default function WalletAnalyzer() {
@@ -26,45 +28,34 @@ export default function WalletAnalyzer() {
   const { theme } = useTheme(); // Access the current theme
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    console.log("handleSubmit called");
-
     e.preventDefault();
-    console.log("before loading:");
-
-    if (!address) {
-      console.log("No address provided, exiting.");
-      return;
-    }
-    console.log("before loading:");
-
+    if (!address) return;
+  
     setIsLoading(true);
-    console.log("before try:");
-
+  
     try {
-      console.log("before fetch:");
-
-      const response = await fetch(`http://localhost:5000/?wallet-address=${encodeURIComponent(address)}`, {
-        mode: "no-cors",
-      });
-      console.log("after fetch:");
-
+      const response = await fetch(
+        `http://localhost:5000/?wallet-address=${encodeURIComponent(address)}`
+      );
+  
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
-      const data: AnalysisType = await response.json(); // Parse JSON response
-      setAnalysis((prev) => [...prev, data]); // Add the new analysis result to the array
+  
+      const data: AnalysisType = await response.json();
+      setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]); // Add walletAddress to each entry
     } catch (error) {
       console.error("Failed to fetch analysis:", error);
-
-      // Add a dummy fallback entry in case of error
-      const fallback: AnalysisType = {
+  
+      // Add a dummy fallback entry
+      const fallback: AnalysisType & { walletAddress: string } = {
         overall: "Unknown",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
           donor: ["0x123abc"],
           criminal: ["0x456def"],
         },
+        walletAddress: address, // Include the current address
       };
       setAnalysis((prev) => [...prev, fallback]);
     } finally {
@@ -126,20 +117,25 @@ export default function WalletAnalyzer() {
 
         {/* Render Analysis Cards */}
         <AnimatePresence>
-          {analysis.map((entry, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="mb-6"
-            >
-              <AnalysisCard walletAddress={address} analysis={entry} isDarkTheme={isDarkTheme} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
+  {analysis.map((entry, index) => (
+    <motion.div
+      key={index}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className="mb-6"
+    >
+      <AnalysisCard
+        analysis={entry}
+        walletAddress={entry.walletAddress} 
+        isDarkTheme={isDarkTheme}
+      />
+    </motion.div>
+  ))}
+</AnimatePresence>
       </main>
     </div>
   );
 }
+
