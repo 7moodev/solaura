@@ -1,5 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+// @ts-ignore
+import { ClipboardCopyIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
 
 type AnalysisType = {
   overall: string;
@@ -20,15 +22,21 @@ const flagStyles: { [key: string]: string } = {
   trader: "bg-purple-100 text-purple-800 border-purple-300",
 };
 
-
-
 export default function AnalysisCard({
   analysis,
+  walletAddress,
   isDarkTheme,
 }: {
   analysis: AnalysisType;
+  walletAddress: string;
   isDarkTheme: boolean;
 }) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(walletAddress).then(() => {
+      alert("Wallet address copied to clipboard!"); // Optionally provide user feedback
+    });
+  };
+
   return (
     <Card
       className={`relative ${
@@ -37,7 +45,6 @@ export default function AnalysisCard({
           : "bg-white/10 border-white/20"
       }`}
     >
-      {/* Flags Section */}
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
         {analysis.analysis.flags.map((flag, index) => (
@@ -53,13 +60,23 @@ export default function AnalysisCard({
 
       {/* Card Content */}
       <CardHeader>
-        <CardTitle className="text-2xl">Wallet Analysis</CardTitle>
+        <CardTitle className="text-2xl">
+          Wallet Analysis of
+          <span className="ml-2 inline-flex items-center">
+            <span className="font-mono">{walletAddress}</span>
+            <ClipboardCopyIcon
+              onClick={handleCopy}
+              className="w-5 h-5 ml-2 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+            />
+          </span>
+        </CardTitle>
         <CardDescription className="text-white/70">
           Results based on past activities
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
+          {/* Overall Section */}
           <div className="flex justify-between items-center">
             <span className="text-lg">Overall:</span>
             <Badge
@@ -71,6 +88,8 @@ export default function AnalysisCard({
               {analysis.overall}
             </Badge>
           </div>
+
+          {/* Hashes Section */}
           {Object.keys(analysis.analysis).map((category) => {
             if (category === "flags") return null; // Skip the flags array
             return (

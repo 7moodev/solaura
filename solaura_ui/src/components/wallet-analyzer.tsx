@@ -135,7 +135,7 @@ export default function WalletAnalyzer() {
               transition={{ duration: 0.5 }}
               className="mb-6"
             >
-              <AnalysisCard analysis={entry} isDarkTheme={isDarkTheme} />
+              <AnalysisCard walletAddress={address} analysis={entry} isDarkTheme={isDarkTheme} />
             </motion.div>
           ))}
         </AnimatePresence>
