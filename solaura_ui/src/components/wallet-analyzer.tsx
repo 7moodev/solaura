@@ -51,7 +51,7 @@ export default function WalletAnalyzer() {
 
       // Add a dummy fallback entry
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "sus",
+        overall: "good",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
           donor: [
@@ -81,7 +81,7 @@ export default function WalletAnalyzer() {
     >
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-2">
-          Solana Wallet Reputation Analyzer
+          Solana Wallet Analyzer
         </h1>
         <p className="text-xl opacity-80">
           Unlock insights and build trust in the Solana ecosystem
