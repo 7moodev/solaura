@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,32 +9,67 @@ import { Loader2 } from "lucide-react";
 import AnalysisCard from "./analysisCard"; // Import the AnalysisCard component
 
 type AnalysisType = {
-  reputation: string;
-  score: number;
-  activities: string[];
-  flags: string[];
+  overall: string;
+  analysis: {
+    flags: string[];
+    donor: string[];
+    criminal: string[];
+    [key: string]: string[]; // For dynamic categories
+  };
 };
 
 export default function WalletAnalyzer() {
   const [address, setAddress] = useState("");
-  const [analysis, setAnalysis] = useState<AnalysisType[]>([]); // Change to array of AnalysisType
+  const [analysis, setAnalysis] = useState<AnalysisType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { theme } = useTheme(); // Access the current theme
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
+    console.log("handleSubmit called");
+
     e.preventDefault();
+    console.log("before loading:");
+
+    if (!address) {
+      console.log("No address provided, exiting.");
+      return;
+    }
+    console.log("before loading:");
+
     setIsLoading(true);
-    // Simulating API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    const newAnalysis: AnalysisType = {
-      reputation: "Good",
-      score: Math.floor(Math.random() * 100), // Generate random score for demonstration
-      activities: ["NFT purchases", "DeFi interactions", "Regular transactions"],
-      flags: ["None"],
-    };
-    setAnalysis((prev) => [...prev, newAnalysis]); // Add new entry to the analysis array
-    setIsLoading(false);
+    console.log("before try:");
+
+    try {
+      console.log("before fetch:");
+
+      const response = await fetch(`http://localhost:5000/?wallet-address=${encodeURIComponent(address)}`, {
+        mode: "no-cors",
+      });
+      console.log("after fetch:");
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data: AnalysisType = await response.json(); // Parse JSON response
+      setAnalysis((prev) => [...prev, data]); // Add the new analysis result to the array
+    } catch (error) {
+      console.error("Failed to fetch analysis:", error);
+
+      // Add a dummy fallback entry in case of error
+      const fallback: AnalysisType = {
+        overall: "Unknown",
+        analysis: {
+          flags: ["donor", "criminal", "insider", "jeeter"],
+          donor: ["0x123abc"],
+          criminal: ["0x456def"],
+        },
+      };
+      setAnalysis((prev) => [...prev, fallback]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isDarkTheme = theme === "dark";
