@@ -6,14 +6,6 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <Header />
 
-      <div className="relative z-[-1] flex place-items-center ">
-        <img
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src={MetaplexLogo.src}
-          alt="<Metaplex Logo"
-          width={500}
-        />
-      </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
         <a
