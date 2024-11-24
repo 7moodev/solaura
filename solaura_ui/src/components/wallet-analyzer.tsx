@@ -38,7 +38,7 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["scammer", "rugger"],
+        flags: ["degen","scammer", "rugger"],
         degen: ["3Yr7f8qB2LmVQNy5Wp6zLCBBYsQb5NmQF1LtVmGz29Z5"],
         spammer: [
           "6Xa4GZv8rKT5CsxF3LMW3Xs8hND6FjNtQRBgFHy9CY9P",
@@ -83,7 +83,7 @@ export default function WalletAnalyzer() {
     {
       overall: "good",
       analysis: {
-        flags: ["og"],
+        flags: ["og","degen"],
         degen: ["4RTM7JGNTPXm5JVLwqX5TFMKF5MTPwqLJF7MzRNKV7XR"],
         spammer: [],
         launder: [],
@@ -126,9 +126,9 @@ export default function WalletAnalyzer() {
       overall: "suspicious",
       analysis: {
         flags: ["rugger"],
-        degen: ["4KMRXLVP5ZTqFJVRMLPJMPZT5MRLZKVRMPXRMJXZTLMR"],
+        degen: [],
         spammer: [],
-        launder: ["7KMRLTPFRMJZTMRPVZRMTPXMVRMLTPF5KMZRPZT5RMLT"],
+        launder: [],
         rugger: ["9MKLRMJPXVRZTLPZTPMLRT5KMVRMZRMKPZT5KVRLPFZJ","7KMRLTPFRMJZTMRPVZRMTPXMVRMLTPF5KMZRPZT5RMLT"],
       },
       age: 15,

@@ -225,62 +225,64 @@ export default function AnalysisCard({
         <div className="grid gap-4">
           {/* Hashes Section */}
           {Object.entries(analysis.analysis).map(([key, hashes]) => {
-            if (key === "flags" || hashes.length === 0) return null; // Skip empty arrays and "flags"
+  if (key === "flags" || hashes.length === 0) return null; // Skip empty arrays and "flags"
 
-            return (
-              <div key={key}>
-                <div className="flex flex-wrap gap-2">
-                  <h3 className="text-lg capitalize">{key} TRX:</h3>
-                  <div className="flex items-center gap-2 mb-2">
-                    {/* Info Button */}
-                    {["degen", "spammer"].includes(key.toLowerCase()) && (
-                      <div
-                        className="relative"
-                        onMouseEnter={() =>
-                          showTooltip(
-                            key.toLowerCase() === "degen"
-                              ? "These are transactions deemed beneficial or trustworthy."
-                              : "These are flagged as suspicious transactions."
-                          )
-                        }
-                        onMouseLeave={hideTooltip}
-                      >
-                        <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
-                        {tooltip.visible && (
-                          <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
-                            {tooltip.text}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  {hashes.map((hash, index) => (
-                    <Badge
-                      key={index}
-                      className={`flex items-center gap-2 px-3 py-2 ${
-                        flagStyles[key] ||
-                        "bg-gray-100 text-gray-800 border-gray-300"
-                      }`}
-                    >
-                      <a
-                        href={explorerLink(hash)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline flex items-center"
-                      >
-                        <LinkIcon className="w-4 h-4 inline mr-1" />
-                        {hash}
-                      </a>
-                      <ClipboardCopyIcon
-                        onClick={() => handleCopy()}
-                        className="w-4 h-4 cursor-pointer hover:text-opacity-80"
-                      />
-                    </Badge>
-                  ))}
+  return (
+    <div key={key} className="mb-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg capitalize">{key} TRX:</h3>
+          {/* Info Button */}
+          {["degen", "spammer"].includes(key.toLowerCase()) && (
+            <div
+              className="relative"
+              onMouseEnter={() =>
+                showTooltip(
+                  key.toLowerCase() === "degen"
+                    ? "These are transactions deemed beneficial or trustworthy."
+                    : "These are flagged as suspicious transactions."
+                )
+              }
+              onMouseLeave={hideTooltip}
+            >
+              <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
+              {tooltip.visible && (
+                <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
+                  {tooltip.text}
                 </div>
-              </div>
-            );
-          })}
+              )}
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          {hashes.map((hash, index) => (
+            <Badge
+              key={index}
+              className={`flex items-center gap-2 px-3 py-2 ${
+                flagStyles[key] ||
+                "bg-gray-100 text-gray-800 border-gray-300"
+              }`}
+            >
+              <a
+                href={explorerLink(hash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline w-full flex items-center"
+              >
+                <LinkIcon className="w-4 h-4 inline mr-1" />
+                {hash}
+              </a>
+              <ClipboardCopyIcon
+                onClick={() => handleCopy()}
+                className="w-4 h-4 cursor-pointer hover:text-opacity-80"
+              />
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+})}
         </div>
         {/* Action Buttons */}
         <div className="mt-6 flex flex-wrap gap-4 justify-end">
