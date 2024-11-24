@@ -26,10 +26,13 @@ type AnalysisType = {
   overall: string;
   analysis: {
     flags: string[];
-    donor: string[];
-    criminal: string[];
+    degen: string[];
+    spammer: string[];
+    launder: string[];
+    rugger: string[];
     [key: string]: string[];
   };
+  walletAddress: string;
 };
 
 const badgeStyles: { [key: string]: string } = {
@@ -38,8 +41,8 @@ const badgeStyles: { [key: string]: string } = {
   Neutral: "bg-gray-500 text-white",
 };
 const flagStyles: { [key: string]: string } = {
-  donor: "bg-green-100 text-green-800 border-green-300",
-  criminal: "bg-red-100 text-red-800 border-red-300",
+  degen: "bg-green-100 text-green-800 border-green-300",
+  spammer: "bg-red-100 text-red-800 border-red-300",
   insider: "bg-blue-100 text-blue-800 border-blue-300",
   jeeter: "bg-pink-100 text-pink-800 border-pink-300",
   rugger: "bg-orange-100 text-orange-800 border-orange-300",
@@ -208,19 +211,20 @@ export default function AnalysisCard({
         <div className="grid gap-4">
           {/* Hashes Section */}
           {Object.entries(analysis.analysis).map(([key, hashes]) => {
-            if (key === "flags") return null;
+            if (key === "flags" || hashes.length === 0) return null; // Skip empty arrays and "flags"
 
             return (
               <div key={key}>
-<div className="flex items-center gap-2 mb-2">
+                <div className="flex flex-wrap gap-2">
                   <h3 className="text-lg capitalize">{key} TRX:</h3>
+                  <div className="flex items-center gap-2 mb-2">
                   {/* Info Button */}
-                  {["donor", "criminal"].includes(key.toLowerCase()) && (
+                  {["degen", "spammer"].includes(key.toLowerCase()) && (
                     <div
                       className="relative"
                       onMouseEnter={() =>
                         showTooltip(
-                          key.toLowerCase() === "donor"
+                          key.toLowerCase() === "degen"
                             ? "These are transactions deemed beneficial or trustworthy."
                             : "These are flagged as suspicious transactions."
                         )
@@ -236,8 +240,6 @@ export default function AnalysisCard({
                     </div>
                   )}
                 </div>
-
-                <div className="flex flex-wrap gap-2">
                   {hashes.map((hash, index) => (
                     <Badge
                       key={index}
