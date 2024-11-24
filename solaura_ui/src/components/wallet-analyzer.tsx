@@ -16,6 +16,7 @@ type AnalysisType = {
     degen: string[];
     spammer: string[];
     launder: string[];
+    kind: string[];
     rugger: string[];
     [key: string]: string[]; 
   };
@@ -38,14 +39,15 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["degen","scammer", "rugger"],
-        degen: ["3Yr7f8qB2LmVQNy5Wp6zLCBBYsQb5NmQF1LtVmGz29Z5"],
+        flags: ["degen","scammer", "rugger","kind"],
+        degen: ["3HKYoDMmthd3ZywmgNppR26bkn9b2bEkwhrmBG5MbziveRFxPvRDr2iC6aTavoVFfkopyBiHtojpMGsRiWybTy6F"],
         spammer: [
-          "6Xa4GZv8rKT5CsxF3LMW3Xs8hND6FjNtQRBgFHy9CY9P",
-          "7MxLWLNLnfxwExKo56VFbJhWmRSPMcEqrpDwNZRaPjZr",
+          "3HKYoDMmthd3ZywmgNppR26bkn9b2bEkwhrmBG5MbziveRFxPvRDr2iC6aTavoVFfkopyBiHtojpMGsRiWybTy6F",
+          "3HKYoDMmthd3ZywmgNppR26bkn9b2bEkwhrmBG5MbziveRFxPvRDr2iC6aTavoVFfkopyBiHtojpMGsRiWybTy6F",
         ],
+        kind: ["2EcSyEbuRW7W6Q9sxeKFinjP2d7NqtV7jeBZ1fmPwbKjGHj1gcVv5CcHgNFtQYBKeq3e4qgknsSijsCVG4zZvmy7"],
         launder: [],
-        rugger: ["8RxpKH5NqrTzWN8CoMeSwzFnZX5DP5s1kT5bwy9LW4Hw"],
+        rugger: ["3HKYoDMmthd3ZywmgNppR26bkn9b2bEkwhrmBG5MbziveRFxPvRDr2iC6aTavoVFfkopyBiHtojpMGsRiWybTy6F"],
       },
       age: 30,
       walletAddress: "DummyWalletAddress3",
@@ -55,9 +57,10 @@ export default function WalletAnalyzer() {
       analysis: {
         flags: ["og", "superteam-member"],
         degen: [
-          "9LyzMGVkSnTzMC8Va1QsLsRtMShkqQdQxFr4PyVJwL6P",
-          "8TfPMgrFnH5B6VrZTq3EJCBXMXfLpPk4MNL6t9gRzw6k",
+          "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge",
+          "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge"
         ],
+        kind: ["2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge"],
         spammer: [],
         launder: [],
         rugger: [],
@@ -68,13 +71,14 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["degen", "scammer"],
+        flags: ["degen", "scammer","kind"],
         degen: [
-          "7JLPCGVXbtWmHKFq7sXt7GxNFVpWTnMz6GmRsKQ5BmLn",
-          "6LV5Kq6JFRkMVyVnTq7X5NpWTPnKwFJw7HpVyGsJqX5R",
+          "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge",
+          "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge",
         ],
-        spammer: ["5PRXTyMvVLTJXwqVQwTRqKFLw5MnFyKPJMKPzXVsRm5T"],
+        spammer: ["2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge"],
         launder: [],
+        kind: ["2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge"],
         rugger: [],
       },
       age: 50,
@@ -84,8 +88,9 @@ export default function WalletAnalyzer() {
       overall: "good",
       analysis: {
         flags: ["og","degen"],
-        degen: ["4RTM7JGNTPXm5JVLwqX5TFMKF5MTPwqLJF7MzRNKV7XR"],
+        degen: ["62idbwebcdXDBMyFm5Vo18kfobNHqu7h6grtVbh623tCWzmkQnX5JS3J8qMtg5xUn2qfYhRDHJCkmxmTD1A4TsEu"],
         spammer: [],
+        kind: ["62idbwebcdXDBMyFm5Vo18kfobNHqu7h6grtVbh623tCWzmkQnX5JS3J8qMtg5xUn2qfYhRDHJCkmxmTD1A4TsEu"],
         launder: [],
         rugger: [],
       },
@@ -95,13 +100,14 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["degen", "scammer"],
+        flags: ["degen", "scammer", "kind"],
         degen: [
-          "3QLmVXPKTZMFyqXwMP5LqJVKw5XMpTZLR5RNMZRMJKwP",
-          "9RMLKPVTqXMwJVqXTFqMKLFRMpZqRMXKwF7RMPwLJRMZ",
+          "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
+          "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
         ],
-        spammer: ["6QRMKPLJVRXTqF7MRLKqFMPZJXM5TRMRXFLwPVwMRLT5"],
+        spammer: ["yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy"],
         launder: [],
+        kind: ["yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy"],
         rugger: [],
       },
       age: 40,
@@ -112,10 +118,11 @@ export default function WalletAnalyzer() {
       analysis: {
         flags: ["superteam-member"],
         degen: [
-          "8MKPQRM5TZqXRMPwXLJVTFRMJLTP5MKVRZTLP5qRMJX7",
-          "7PLVRMTJMLRTqZMPFqXRMZPVXTLPZMJP7RLMTJP5MKZT",
+          "4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr",
+          "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
         ],
         spammer: [],
+        kind: ["4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr"],
         launder: [],
         rugger: [],
       },
@@ -128,6 +135,7 @@ export default function WalletAnalyzer() {
         flags: ["rugger"],
         degen: [],
         spammer: [],
+        kind: ["4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr"],
         launder: [],
         rugger: ["9MKLRMJPXVRZTLPZTPMLRT5KMVRMZRMKPZT5KVRLPFZJ","7KMRLTPFRMJZTMRPVZRMTPXMVRMLTPF5KMZRPZT5RMLT"],
       },
@@ -139,10 +147,11 @@ export default function WalletAnalyzer() {
       analysis: {
         flags: ["og"],
         degen: [
-          "7TLM5RMJPXZMKVRPTLZRMPJVLTPFJVLTPRMLKXZRMZML",
-          "4TLMZMRLPXVRMPTF7MRLPXKMZT5MRMPJZRMPTLVRMLTP",
+          "4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr",
+          "4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr",
         ],
         spammer: [],
+        kind: ["4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr"],
         launder: [],
         rugger: [],
       },

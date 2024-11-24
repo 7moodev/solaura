@@ -29,6 +29,7 @@ type AnalysisType = {
     degen: string[];
     spammer: string[];
     launder: string[];
+    kind: string[];
     rugger: string[];
     [key: string]: string[];
   };
@@ -44,10 +45,10 @@ const badgeStyles: { [key: string]: string } = {
 const flagStyles: { [key: string]: string } = {
   degen: "bg-green-100 text-green-800 border-green-300",
   spammer: "bg-red-100 text-red-800 border-red-300",
-  insider: "bg-blue-100 text-blue-800 border-blue-300",
-  jeeter: "bg-pink-100 text-pink-800 border-pink-300",
+  og: "bg-blue-100 text-blue-800 border-blue-300",
+  newwallet: "bg-pink-100 text-pink-800 border-pink-300",
   rugger: "bg-orange-100 text-orange-800 border-orange-300",
-  trader: "bg-purple-100 text-purple-800 border-purple-300",
+  kind: "bg-purple-100 text-purple-800 border-purple-300",
 };
 const getBadgeStyle = (flag: string) => {
   if (flag === "good") return badgeStyles.Good;
@@ -192,19 +193,19 @@ export default function AnalysisCard({
           </Badge>
         ))}
         {/* Wallet Age Badge */}
-  
+
         {!isSuperteam && (
           <div
-  className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md whitespace-nowrap ${
-    isDarkTheme
-      ? "bg-yellow-500 text-black"
-      : "bg-yellow-100 text-yellow-800 border-yellow-300"
-  }`}
->
-  Wallet Age: {analysis.age} days
-</div>
-)}
-</div>
+            className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md whitespace-nowrap ${
+              isDarkTheme
+                ? "bg-yellow-500 text-black"
+                : "bg-yellow-100 text-yellow-800 border-yellow-300"
+            }`}
+          >
+            Wallet Age: {analysis.age} days
+          </div>
+        )}
+      </div>
       {/* Card Content */}
       <CardHeader>
         <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
@@ -225,64 +226,64 @@ export default function AnalysisCard({
         <div className="grid gap-4">
           {/* Hashes Section */}
           {Object.entries(analysis.analysis).map(([key, hashes]) => {
-  if (key === "flags" || hashes.length === 0) return null; // Skip empty arrays and "flags"
+            if (key === "flags" || hashes.length === 0) return null; // Skip empty arrays and "flags"
 
-  return (
-    <div key={key} className="mb-4">
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg capitalize">{key} TRX:</h3>
-          {/* Info Button */}
-          {["degen", "spammer"].includes(key.toLowerCase()) && (
-            <div
-              className="relative"
-              onMouseEnter={() =>
-                showTooltip(
-                  key.toLowerCase() === "degen"
-                    ? "These are transactions deemed beneficial or trustworthy."
-                    : "These are flagged as suspicious transactions."
-                )
-              }
-              onMouseLeave={hideTooltip}
-            >
-              <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
-              {tooltip.visible && (
-                <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
-                  {tooltip.text}
+            return (
+              <div key={key} className="mb-4">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg capitalize">{key} TRX:</h3>
+                    {/* Info Button */}
+                    {["degen", "spammer"].includes(key.toLowerCase()) && (
+                      <div
+                        className="relative"
+                        onMouseEnter={() =>
+                          showTooltip(
+                            key.toLowerCase() === "degen"
+                              ? "These are transactions deemed beneficial or trustworthy."
+                              : "These are flagged as suspicious transactions."
+                          )
+                        }
+                        onMouseLeave={hideTooltip}
+                      >
+                        <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
+                        {tooltip.visible && (
+                          <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
+                            {tooltip.text}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {hashes.map((hash, index) => (
+                      <Badge
+                        key={index}
+                        className={`flex items-center gap-2 px-3 py-2 ${
+                          flagStyles[key] ||
+                          "bg-gray-100 text-gray-800 border-gray-300"
+                        }`}
+                      >
+                        <a
+                          href={explorerLink(hash)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline w-full flex items-center"
+                        >
+                          <LinkIcon className="w-4 h-4 inline mr-1" />
+                          {hash}
+                        </a>
+                        <ClipboardCopyIcon
+                          onClick={() => handleCopy()}
+                          className="w-4 h-4 cursor-pointer hover:text-opacity-80"
+                        />
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          {hashes.map((hash, index) => (
-            <Badge
-              key={index}
-              className={`flex items-center gap-2 px-3 py-2 ${
-                flagStyles[key] ||
-                "bg-gray-100 text-gray-800 border-gray-300"
-              }`}
-            >
-              <a
-                href={explorerLink(hash)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline w-full flex items-center"
-              >
-                <LinkIcon className="w-4 h-4 inline mr-1" />
-                {hash}
-              </a>
-              <ClipboardCopyIcon
-                onClick={() => handleCopy()}
-                className="w-4 h-4 cursor-pointer hover:text-opacity-80"
-              />
-            </Badge>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-})}
+              </div>
+            );
+          })}
         </div>
         {/* Action Buttons */}
         <div className="mt-6 flex flex-wrap gap-4 justify-end">
