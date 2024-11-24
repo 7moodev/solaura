@@ -154,7 +154,7 @@ export default function AnalysisCard({
     >
       {/* Superteam Badge */}
       {isSuperteam && (
-        <div className="absolute -top-3 -right-3 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
+        <div className="absolute -top-5 -right-3 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
           Superteam Member
         </div>
       )}
