@@ -55,7 +55,7 @@ export default function WalletAnalyzer() {
     {
       overall: "good",
       analysis: {
-        flags: ["og", "superteam-member"],
+        flags: ["og", ],
         degen: [
           "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge",
           "2VfurFhzBgyeAgrMmrSnZPPFS25WfaQdFzzKWhFsTSHmk5y78fRkNpbSTTWAaeJcWWDPG8jDCqEp2rjb5bwFGpge"
@@ -87,7 +87,7 @@ export default function WalletAnalyzer() {
     {
       overall: "good",
       analysis: {
-        flags: ["og","degen"],
+        flags: ["og","degen", ],
         degen: ["62idbwebcdXDBMyFm5Vo18kfobNHqu7h6grtVbh623tCWzmkQnX5JS3J8qMtg5xUn2qfYhRDHJCkmxmTD1A4TsEu"],
         spammer: [],
         kind: ["62idbwebcdXDBMyFm5Vo18kfobNHqu7h6grtVbh623tCWzmkQnX5JS3J8qMtg5xUn2qfYhRDHJCkmxmTD1A4TsEu"],
@@ -100,7 +100,7 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["degen", "scammer", "kind"],
+        flags: ["degen", "scammer"],
         degen: [
           "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
           "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
@@ -116,7 +116,7 @@ export default function WalletAnalyzer() {
     {
       overall: "good",
       analysis: {
-        flags: ["superteam-member"],
+        flags: ["og", "degen", "kind"],
         degen: [
           "4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr",
           "yXBwUHGvrxkP4DMrAZfffZKnvkR26njuPT41KVo2NYNFVfWWTrENNgF5JrSV1Rij5FjNFnWMGsasLnFiYWABUCy",
@@ -132,7 +132,7 @@ export default function WalletAnalyzer() {
     {
       overall: "suspicious",
       analysis: {
-        flags: ["rugger"],
+        flags: ["rugger", "degen", "drainer"],
         degen: [],
         spammer: [],
         kind: ["4iGx5zCcwxbyWKLt9LMvsFToMNKUHhR1DEQW2axd66ELwRPxNjzzWwgnwUwKfCNGa1Qhm3vBfMZR7uXJApApMhZr"],
