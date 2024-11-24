@@ -180,13 +180,13 @@ export default function AnalysisCard({
       )}
 
       {/* Flags Section */}
-      <div className="absolute top-4 right-4 flex flex-wrap gap-2 items-center">
+      <div className="absolute top-4 right-4 flex flex-wrap gap-2 items-center transform translate-y-[6%]">
   {analysis.analysis.flags.map((flag, index) => (
     <Badge
       key={index}
       variant="outline"
-      className={`px-4 py-1.55 text-base ${
-        flagStyles[flag] || "bg-gray-100 text-gray-900 border-gray-300"
+      className={`px-4 py-2 text-[1.2rem] ${
+        flagStyles[flag] || "bg-gray-100 text-gray-800 border-gray-300"
       }`}
     >
       {flag}
@@ -195,7 +195,7 @@ export default function AnalysisCard({
   {/* Wallet Age Badge */}
   {!isSuperteam && (
     <div
-      className={`absolute -top-10 -right-9 bg-yellow-400 text-black px-4 py-1.25 text-base rounded-md font-bold shadow-md whitespace-nowrap ${
+      className={`absolute -top-10 -right-9 bg-yellow-400 text-black px-4 py-2 text-[1.2rem] rounded-md font-bold shadow-md whitespace-nowrap transform translate-y-[6%] ${
         isDarkTheme
           ? "bg-yellow-500 text-black"
           : "bg-yellow-100 text-yellow-800 border-yellow-300"
@@ -205,7 +205,6 @@ export default function AnalysisCard({
     </div>
   )}
 </div>
-
       {/* Card Content */}
       <CardHeader>
         <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
