@@ -24,7 +24,7 @@ const Header = () => {
           <img
             src={solauraLogo.src}
             alt="Solaura Logo"
-            className="h-12 dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
+            className="h-20 "
           />
         </div>
         <div className="flex pt-4 lg:pt-0 w-full items-end justify-center gap-4 dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">

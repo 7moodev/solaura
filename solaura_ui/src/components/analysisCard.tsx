@@ -178,7 +178,7 @@ export default function AnalysisCard({
       <CardHeader>
         <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
         <div className="mt-2 flex items-center gap-2">
-          <span className="font-mono text-lg text-gray-300">
+          <span className="font-mono text-lg text-gray-500">
             {walletAddress}
           </span>
           <ClipboardCopyIcon
