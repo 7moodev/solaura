@@ -146,7 +146,7 @@ export default function AnalysisCard({
       )}
 
       {/* Overall Section */}
-      <div className="flex justify-between items-center">
+      {isSuperteam?<div></div>:<div className="flex justify-between items-center">
         <div
           className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
             analysis.overall === "good"
@@ -156,7 +156,8 @@ export default function AnalysisCard({
         >
           {analysis.overall.toUpperCase()}
         </div>
-      </div>
+      </div>}
+      
 
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
