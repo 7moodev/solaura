@@ -44,7 +44,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let rpc_client = std::sync::Arc::new(RpcClient::new(env::var("solrpc").unwrap()));
     let pubkey = Pubkey::from_str_const("GoH45jngWyUf2cpB7LNCm11Dnb2UZ7hTR7c1EijRL6Ne");
     
-    run_server().await;
+    // run_server().await;
+    println!("{}",Signature::default().to_string());
     // println!("{}", is_superteam(rpc_client.clone(), pubkey).await.unwrap());
     // println!("{}", is_degen(&rpc_client, pubkey).unwrap().0);
     // println!("{}", is_degen(&rpc_client, pubkey).unwrap().1);
@@ -418,12 +419,23 @@ async fn run_server() {
                 //     Ok(result) => result,
                 //     Err(_) => (false, Signature::default()),
                 // };
-                // let degen = is_degen(&rpc_client, Pubkey::from_str(wallet).unwrap()).unwrap().0;
+                let degen = is_degen(&rpc_client, Pubkey::from_str(wallet).unwrap()).unwrap().0;
                 let overall = "good";
+                let mut flags: Vec<String> = Vec::new();
+                if superteam {
+                    flags.push("superteam-member".to_string());
+                }
+                if degen {
+                    flags.push("degen".to_string());
+                }
+                if is_spammer {
+                    flags.push("spammer".to_string());
+                }
+
                 // Send a structured JSON response
                 return Ok::<_, warp::Rejection>(warp::reply::json(&json!({
                     "analysis":{
-                        "flags":[if superteam {"superteam-member"} else {""}, if is_spammer {"spammer"} else {""}]
+                        "flags": flags,
                     },
                     "walletAddress": wallet,
                     "overall": overall,
