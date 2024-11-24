@@ -6,11 +6,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExclamationCircleIcon } from "@heroicons/react/outline"; // Report icon
+import { ExclamationCircleIcon } from "@heroicons/react/outline"; 
 import { XIcon } from "lucide-react";
 // @ts-ignore
-import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
-import { address } from "framer-motion/client";
+import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; 
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
   Connection,
@@ -65,7 +64,7 @@ export default function AnalysisCard({
 
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress).then(() => {
-      alert("Wallet address copied to clipboard!"); // Optionally provide user feedback
+      alert("Wallet address copied to clipboard!"); 
     });
   };
   const handleMintNFT = async () => {
@@ -73,13 +72,13 @@ export default function AnalysisCard({
       alert("Please connect your wallet first.");
       return;
     }
-
+  
     try {
-      // Establish connection to the Solana blockchain
       const connection = new Connection(
         "https://api.testnet.solana.com",
         "confirmed"
       );
+  
       // Create a transaction to transfer a token (NFT)
       const transaction = new Transaction().add(
         SystemProgram.transfer({
@@ -88,25 +87,31 @@ export default function AnalysisCard({
           lamports: 100000000, // Example: Sending 0.001 SOL
         })
       );
-
-      // Set recent blockhash and fee payer
-      transaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
+  
+      // Fetch latest blockhash
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
-
-      // Request the wallet to sign the transaction
+  
+      // Request wallet to sign the transaction
       const signedTransaction = await signTransaction(transaction);
-
+  
       // Send the signed transaction to the blockchain
-      const signature = await connection.sendRawTransaction(
-        signedTransaction.serialize()
-      );
-
-      // Confirm the transaction
-      await connection.confirmTransaction(signature, "confirmed");
-
-      alert(`NFT Minted! Transaction Signature: ${signature}`);
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+  
+      // Confirm the transaction with the new confirmation method
+      const confirmation = await connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
+  
+      if (confirmation.value.err) {
+        console.error("Transaction failed:", confirmation.value.err);
+        alert("NFT mint failed. Please try again.");
+      } else {
+        alert(`NFT Minted! Transaction Signature: ${signature}`);
+      }
     } catch (error) {
       console.error("Error minting NFT:", error);
       alert("Failed to mint NFT. Please try again.");
@@ -114,7 +119,6 @@ export default function AnalysisCard({
   };
  
   const handleReportOnChain = () => {
-    // Placeholder logic for reporting on chain
     alert("Reported on-chain (dummy functionality).");
   };
 
