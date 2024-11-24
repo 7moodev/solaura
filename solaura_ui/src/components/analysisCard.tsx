@@ -6,10 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExclamationCircleIcon } from "@heroicons/react/outline"; 
+import {
+  ExclamationCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/outline";
 import { XIcon } from "lucide-react";
 // @ts-ignore
-import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; 
+import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
   Connection,
@@ -17,6 +20,7 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
+import { useState } from "react";
 
 type AnalysisType = {
   overall: string;
@@ -61,6 +65,13 @@ export default function AnalysisCard({
 
   const explorerLink = (hash: string) => `https://solscan.io/tx/${hash}`;
   const { publicKey, signTransaction } = useWallet();
+  const [tooltip, setTooltip] = useState<{ visible: boolean; text: string }>({
+    visible: false,
+    text: "",
+  });
+
+  const showTooltip = (text: string) => setTooltip({ visible: true, text });
+  const hideTooltip = () => setTooltip({ visible: false, text: "" });
 
   const isSuperteam = analysis.analysis.flags.includes("superteam-member");
 
@@ -115,8 +126,8 @@ export default function AnalysisCard({
       analysis.overall.toLowerCase() === "good"
         ? "This guy is legit! 🚀"
         : "ALERT! Suspicious wallet! 🚨";
-    if(isSuperteam){
-      message = "Superteam Wallet! 🦸"
+    if (isSuperteam) {
+      message = "Superteam Wallet! 🦸";
     }
     const shareText = `${message} Check out this wallet analysis by Solaura for ${
       "https://solscan.io/account/" + walletAddress
@@ -146,18 +157,21 @@ export default function AnalysisCard({
       )}
 
       {/* Overall Section */}
-      {isSuperteam?<div></div>:<div className="flex justify-between items-center">
-        <div
-          className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
-            analysis.overall === "good"
-              ? badgeStyles.Good
-              : badgeStyles.Suspicious
-          }`}
-        >
-          {analysis.overall.toUpperCase()}
+      {isSuperteam ? (
+        <div></div>
+      ) : (
+        <div className="flex justify-between items-center">
+          <div
+            className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
+              analysis.overall === "good"
+                ? badgeStyles.Good
+                : badgeStyles.Suspicious
+            }`}
+          >
+            {analysis.overall.toUpperCase()}
+          </div>
         </div>
-      </div>}
-      
+      )}
 
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
@@ -198,7 +212,31 @@ export default function AnalysisCard({
 
             return (
               <div key={key}>
-                <h3 className="text-lg mb-2 capitalize">{key} TrX:</h3>
+<div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg capitalize">{key} TRX:</h3>
+                  {/* Info Button */}
+                  {["donor", "criminal"].includes(key.toLowerCase()) && (
+                    <div
+                      className="relative"
+                      onMouseEnter={() =>
+                        showTooltip(
+                          key.toLowerCase() === "donor"
+                            ? "These are transactions deemed beneficial or trustworthy."
+                            : "These are flagged as suspicious transactions."
+                        )
+                      }
+                      onMouseLeave={hideTooltip}
+                    >
+                      <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
+                      {tooltip.visible && (
+                        <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
+                          {tooltip.text}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex flex-wrap gap-2">
                   {hashes.map((hash, index) => (
                     <Badge
