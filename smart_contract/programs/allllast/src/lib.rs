@@ -89,7 +89,7 @@ pub mod anchor_example {
         .payer(&ctx.accounts.payer.to_account_info())
         .update_authority(Some(&ctx.accounts.reputation_config.to_account_info()))
         .system_program(&ctx.accounts.system_program.to_account_info())
-        .name("My Super Asset".to_string())
+        .name("Solaura official reputation NFT".to_string())
         .uri("https://arweave.net/32YZkZ4iXbhqHPcPkHHX8xpvNywp9hwt2SNDrbCmJZyg".to_string())
         .plugins(collection_plugin)
         .invoke_signed(signer_seeds)?;
