@@ -59,7 +59,7 @@ export default function WalletAnalyzer() {
       console.error("Failed to fetch analysis:", error);
 
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "good",
+        overall: "Suspicious",
         analysis: {
           flags: ["donor", "criminal", "insider", "jeeter"],
           donor: [
