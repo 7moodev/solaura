@@ -36,35 +36,11 @@ use std::fs;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    // let rpc_client: RpcClient = RpcClient::new("https://api.mainnet-beta.solana.com");
-    // run_server().await;
-    let rpc_client = RpcClient::new("https://rough-prettiest-waterfall.solana-mainnet.quiknode.pro/7071ef7f5010938eef614d78f1f6dc76cf50ca0a/");
+    let rpc_client = RpcClient::new(env::var("RPC_URL").unwrap());
     let pubkey = Pubkey::from_str_const("J9RaTBYQ7C8y5ZMfy9zc9Sjnoixik1Bj23wQ26TdTRZt");
-    // let sig = fetch_signatures(&rpc_client, pubkey);
-    // let mut sig :Vec<Signature> = Vec::new();
-    // sig.push(Signature::from_str("MA3TvMQWbDejAwaJ36h362snv2gcyuCBpa1KWD86Vv7knYwB5BZMi46b4yKsmkhqD913nF7u5S56MVPmipeJxHQ").unwrap());
-    // let count = sig.len();
-    // let tx = fetch_transaction(&rpc_client, sig[0], Some(5));
-    // println!("{:?}", tx.clone());
-    // let accts = fetch_wallet_addresses(tx.clone());
-    // println!("{:?}", accts);
-    // let count = accts.len();
-    // print!("\n THE COUNT IS: {} \n", count);
-    // let instructions = fetch_instructions(tx.clone());
-    // println!("{:?}", instructions);
-    // let count = instructions.len();
-    // print!("\n THE COUNT IS: {} \n", count);
-    // println!("{:?}", fetch_wallet_age(&rpc_client, pubkey));
-    // println!("{:?}", is_spammer(&rpc_client, pubkey, 1000));
-    //print!("{:?}", fetch_transaction_age(&rpc_client, Signature::from_str("4tQt3M5vdoKphpHYwyAAHYghbkniFXvWZot4hsETbm8YqCrWjRimm9M91yivVEoY8y7FkdSCPTXfC9drmcsY9pra").unwrap()));
-    // let spammer : Pubkey = Pubkey::from_str_const("Habp5bncMSsBC3vkChyebepym5dcTNRYeg2LVG464E96");
-    // let is_spam = is_spammer(&rpc_client, spammer, 10);
-    // print!("\n IS SPAM: {} \n", is_spam);
-    // println!("{:?}", token_accounts);
     println!("{}",is_superteam(&rpc_client, pubkey).unwrap());
     Ok(())
 }
-// fn filter_transactions
 fn fetch_signatures(
     rpc_client: &RpcClient,
     pubkey: Pubkey,
@@ -72,15 +48,6 @@ fn fetch_signatures(
 ) -> Vec<Signature>{
     println!("Fetching signatures");
     let mut transaction_history = rpc_client.get_signatures_for_address(&pubkey).unwrap();
-    // while transaction_history.len() %1000 == 0{
-    //     if transaction_history.len()==10000{
-    //         // let transaction = fetch_transaction(rpc_client, Signature::from_str(&transaction_history[9999].signature).unwrap());
-    //         // let age = fetch_transaction_age(rpc_client, Signature::from_str(&transaction_history[9999].signature).unwrap());
-    //         // if age.unwrap() < 24 {
-    //         //     break;
-    //         // }
-    //         // break;
-    //     }
         println!("Fetching more signatures");
         let last_tx = transaction_history.last().unwrap();
         let last_tx_signature = Signature::from_str(&last_tx.signature).unwrap();
