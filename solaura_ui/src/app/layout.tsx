@@ -8,7 +8,7 @@ import { UmiProvider } from "@/providers/umiProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Metaplex Umi Next.js",
+  title: "Solaura.io",
   description: "Metaplex template for Next.js using Umi",
 };
 

@@ -1,0 +1,212 @@
+[
+    {
+        "overall": "Average",
+        "analysis": {
+            "rugger": [
+                "0x6c444c8c"
+            ],
+            "insider": [
+                "0xcadb8ef6"
+            ],
+            "criminal": [
+                "0x87d2bbc9"
+            ],
+            "trader": [
+                "0x1fdcc313",
+                "0x28f633da",
+                "0xa83de026"
+            ],
+            "flags": [
+                "rugger",
+                "insider",
+                "criminal",
+                "trader"
+            ]
+        }
+    },
+    {
+        "overall": "Bad",
+        "analysis": {
+            "jeeter": [
+                "0xb729777c",
+                "0xa7d8bc9f"
+            ],
+            "criminal": [
+                "0x4b6c60cb"
+            ],
+            "insider": [
+                "0xff3161a7",
+                "0x26d4fe09",
+                "0x9c30b0f1"
+            ],
+            "rugger": [
+                "0x21234370",
+                "0x7f3a8fe1"
+            ],
+            "flags": [
+                "jeeter",
+                "criminal",
+                "insider",
+                "rugger"
+            ]
+        }
+    },
+    {
+        "overall": "Good",
+        "analysis": {
+            "criminal": [
+                "0x9870a230",
+                "0xb5c09110"
+            ],
+            "rugger": [
+                "0x0f8866c1",
+                "0x2d0c7d7c",
+                "0xd24a4af8"
+            ],
+            "trader": [
+                "0x06dc02b9",
+                "0xae7facc1",
+                "0xc1c60543"
+            ],
+            "flags": [
+                "criminal",
+                "rugger",
+                "trader"
+            ]
+        }
+    },
+    {
+        "overall": "Bad",
+        "analysis": {
+            "jeeter": [
+                "0xeec823db",
+                "0xf64039d6",
+                "0x391ce28b"
+            ],
+            "trader": [
+                "0x2246ea96",
+                "0x63c6e9de"
+            ],
+            "flags": [
+                "jeeter",
+                "trader"
+            ]
+        }
+    },
+    {
+        "overall": "Average",
+        "analysis": {
+            "rugger": [
+                "0x4a74fb48",
+                "0xc2557fcf"
+            ],
+            "flags": [
+                "rugger"
+            ]
+        }
+    },
+    {
+        "overall": "Good",
+        "analysis": {
+            "criminal": [
+                "0xdc890f2c",
+                "0x2ef4b1c5"
+            ],
+            "flags": [
+                "criminal"
+            ]
+        }
+    },
+    {
+        "overall": "Average",
+        "analysis": {
+            "criminal": [
+                "0x910ca88c",
+                "0x672c658b",
+                "0x85317659"
+            ],
+            "jeeter": [
+                "0x881c2ad6",
+                "0xcbc525bc",
+                "0xefff43d5"
+            ],
+            "rugger": [
+                "0x940bb225",
+                "0xf2ce38f9",
+                "0x1ae45a2c"
+            ],
+            "flags": [
+                "criminal",
+                "jeeter",
+                "rugger"
+            ]
+        }
+    },
+    {
+        "overall": "Average",
+        "analysis": {
+            "criminal": [
+                "0x2ff87320"
+            ],
+            "trader": [
+                "0x9f08f6f5"
+            ],
+            "rugger": [
+                "0x9789e588"
+            ],
+            "jeeter": [
+                "0xf8378f70",
+                "0x64ba2d4d"
+            ],
+            "flags": [
+                "criminal",
+                "trader",
+                "rugger",
+                "jeeter"
+            ]
+        }
+    },
+    {
+        "overall": "Average",
+        "analysis": {
+            "insider": [
+                "0xc30e2225",
+                "0x880a2653"
+            ],
+            "donor": [
+                "0x82fbceee"
+            ],
+            "jeeter": [
+                "0x6c3d5e48",
+                "0x72764ec6"
+            ],
+            "flags": [
+                "insider",
+                "donor",
+                "jeeter"
+            ]
+        }
+    },
+    {
+        "overall": "Bad",
+        "analysis": {
+            "insider": [
+                "0x2402150e",
+                "0xedbb0f95",
+                "0xadb8fc97"
+            ],
+            "criminal": [
+                "0xb033de23",
+                "0x88d6e964"
+            ],
+            "trader": [
+                "0x599b3fb4"
+            ],
+            "flags": [
+                "insider",
+                "criminal",
+                "trader"
+            ]
+        }
+    }
+]
