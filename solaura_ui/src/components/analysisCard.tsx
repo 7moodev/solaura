@@ -158,7 +158,7 @@ export default function AnalysisCard({
       {/* Superteam Badge */}
       {isSuperteam && (
         <div className="absolute -top-5 -right-9 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
-          Superteam Member, {analysis.age} days wallet
+          Superteam Member, {Math.floor(analysis.age/24)} days wallet
         </div>
       )}
 
@@ -181,31 +181,31 @@ export default function AnalysisCard({
 
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2 items-center">
-        {analysis.analysis.flags.map((flag, index) => (
-          <Badge
-            key={index}
-            variant="outline"
-            className={`px-3 py-1 text-sm ${
-              flagStyles[flag] || "bg-gray-100 text-gray-800 border-gray-300"
-            }`}
-          >
-            {flag}
-          </Badge>
-        ))}
-        {/* Wallet Age Badge */}
+  {analysis.analysis.flags.map((flag, index) => (
+    <Badge
+      key={index}
+      variant="outline"
+      className={`px-4 py-1.55 text-base ${
+        flagStyles[flag] || "bg-gray-100 text-gray-900 border-gray-300"
+      }`}
+    >
+      {flag}
+    </Badge>
+  ))}
+  {/* Wallet Age Badge */}
+  {!isSuperteam && (
+    <div
+      className={`absolute -top-10 -right-9 bg-yellow-400 text-black px-4 py-1.25 text-base rounded-md font-bold shadow-md whitespace-nowrap ${
+        isDarkTheme
+          ? "bg-yellow-500 text-black"
+          : "bg-yellow-100 text-yellow-800 border-yellow-300"
+      }`}
+    >
+      Wallet Age: {analysis.age} days
+    </div>
+  )}
+</div>
 
-        {!isSuperteam && (
-          <div
-            className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md whitespace-nowrap ${
-              isDarkTheme
-                ? "bg-yellow-500 text-black"
-                : "bg-yellow-100 text-yellow-800 border-yellow-300"
-            }`}
-          >
-            Wallet Age: {analysis.age} days
-          </div>
-        )}
-      </div>
       {/* Card Content */}
       <CardHeader>
         <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
@@ -232,7 +232,7 @@ export default function AnalysisCard({
               <div key={key} className="mb-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg capitalize">{key} TRX:</h3>
+                    <h3 className="text-lg capitalize">{key} Tx:</h3>
                     {/* Info Button */}
                     {["degen", "spammer"].includes(key.toLowerCase()) && (
                       <div
