@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes"; // Import the theme hook
+import { useTheme } from "next-themes"; 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import AnalysisCard from "./analysisCard"; // Import the AnalysisCard component
+import AnalysisCard from "./analysisCard"; 
 import { useWallet } from "@solana/wallet-adapter-react";
 
 type AnalysisType = {
@@ -15,25 +15,24 @@ type AnalysisType = {
     flags: string[];
     donor: string[];
     criminal: string[];
-    [key: string]: string[]; // For dynamic categories
+    [key: string]: string[]; 
   };
   walletAddress: string;
 };
 
 export default function WalletAnalyzer() {
-  const { publicKey } = useWallet(); // Fetch wallet connection details
+  const { publicKey } = useWallet(); 
   const [address, setAddress] = useState("");
   const [analysis, setAnalysis] = useState<AnalysisType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { theme } = useTheme(); // Access the current theme
+  const { theme } = useTheme(); 
   const isValidSolanaAddress = (address: string) => {
-    const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; // Solana addresses regex
+    const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; 
     return base58Regex.test(address);
   };
 
   useEffect(() => {
-    // Prefill the input with the connected wallet address if available
     if (publicKey) {
       setAddress(publicKey.toBase58());
     }
@@ -55,11 +54,10 @@ export default function WalletAnalyzer() {
       }
 
       const data: AnalysisType = await response.json();
-      setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]); // Add walletAddress to each entry
+      setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]); 
     } catch (error) {
       console.error("Failed to fetch analysis:", error);
 
-      // Add a dummy fallback entry
       const fallback: AnalysisType & { walletAddress: string } = {
         overall: "sus",
         analysis: {
@@ -71,7 +69,7 @@ export default function WalletAnalyzer() {
             "3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2",
           ],
         },
-        walletAddress: address, // Include the current address
+        walletAddress: address, 
       };
       setAnalysis((prev) => [...prev, fallback]);
     } finally {

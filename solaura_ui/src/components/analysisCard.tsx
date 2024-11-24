@@ -11,6 +11,13 @@ import { XIcon } from "lucide-react";
 // @ts-ignore
 import { ClipboardCopyIcon, LinkIcon } from "@heroicons/react/outline"; // Add a copy icon (Heroicons or your preferred icon library)
 import { address } from "framer-motion/client";
+import { useWallet } from "@solana/wallet-adapter-react";
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
 
 type AnalysisType = {
   overall: string;
@@ -49,18 +56,63 @@ export default function AnalysisCard({
   walletAddress: string;
   isDarkTheme: boolean;
 }) {
+  const tokenAddress = new PublicKey(
+    "6xy719wtR9vjumsLUxEH3SXKQAGfVtuFdZBf4XTeWck3"
+  );
+
   const explorerLink = (hash: string) => `https://solscan.io/tx/${hash}`;
+  const { publicKey, signTransaction } = useWallet();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress).then(() => {
       alert("Wallet address copied to clipboard!"); // Optionally provide user feedback
     });
   };
-  const handleMintNFT = () => {
-    // Simulated wallet connection and NFT minting preparation logic
-    alert("Minting NFT: Open wallet to sign transaction.");
-  };
+  const handleMintNFT = async () => {
+    if (!publicKey || !signTransaction) {
+      alert("Please connect your wallet first.");
+      return;
+    }
 
+    try {
+      // Establish connection to the Solana blockchain
+      const connection = new Connection(
+        "https://api.testnet.solana.com",
+        "confirmed"
+      );
+      // Create a transaction to transfer a token (NFT)
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: tokenAddress,
+          lamports: 100000000, // Example: Sending 0.001 SOL
+        })
+      );
+
+      // Set recent blockhash and fee payer
+      transaction.recentBlockhash = (
+        await connection.getLatestBlockhash()
+      ).blockhash;
+      transaction.feePayer = publicKey;
+
+      // Request the wallet to sign the transaction
+      const signedTransaction = await signTransaction(transaction);
+
+      // Send the signed transaction to the blockchain
+      const signature = await connection.sendRawTransaction(
+        signedTransaction.serialize()
+      );
+
+      // Confirm the transaction
+      await connection.confirmTransaction(signature, "confirmed");
+
+      alert(`NFT Minted! Transaction Signature: ${signature}`);
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      alert("Failed to mint NFT. Please try again.");
+    }
+  };
+ 
   const handleReportOnChain = () => {
     // Placeholder logic for reporting on chain
     alert("Reported on-chain (dummy functionality).");
@@ -89,18 +141,18 @@ export default function AnalysisCard({
           : "bg-white/10 border-white/20"
       }`}
     >
-          {/* Overall Section */}
-          <div className="flex justify-between items-center">
-            <div
-              className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
-                analysis.overall === "good"
-                  ? badgeStyles.Good
-                  : badgeStyles.Suspicious
-              }`}
-            >
-              {analysis.overall.toUpperCase()}
-            </div>
-          </div>
+      {/* Overall Section */}
+      <div className="flex justify-between items-center">
+        <div
+          className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
+            analysis.overall === "good"
+              ? badgeStyles.Good
+              : badgeStyles.Suspicious
+          }`}
+        >
+          {analysis.overall.toUpperCase()}
+        </div>
+      </div>
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
         {analysis.analysis.flags.map((flag, index) => (
@@ -134,8 +186,6 @@ export default function AnalysisCard({
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-
-
           {/* Hashes Section */}
 
           {Object.entries(analysis.analysis).map(([key, hashes]) => {
