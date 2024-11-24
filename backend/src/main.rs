@@ -44,8 +44,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let rpc_client = std::sync::Arc::new(RpcClient::new(env::var("solrpc").unwrap()));
     let pubkey = Pubkey::from_str_const("GoH45jngWyUf2cpB7LNCm11Dnb2UZ7hTR7c1EijRL6Ne");
     
-    // run_server().await;
-    println!("{}",Signature::default().to_string());
+    run_server().await;
     // println!("{}", is_superteam(rpc_client.clone(), pubkey).await.unwrap());
     // println!("{}", is_degen(&rpc_client, pubkey).unwrap().0);
     // println!("{}", is_degen(&rpc_client, pubkey).unwrap().1);
@@ -431,11 +430,11 @@ async fn run_server() {
                 if is_spammer {
                     flags.push("spammer".to_string());
                 }
-
                 // Send a structured JSON response
                 return Ok::<_, warp::Rejection>(warp::reply::json(&json!({
                     "analysis":{
                         "flags": flags,
+                        "isSpammer": spam_sig,
                     },
                     "walletAddress": wallet,
                     "overall": overall,
