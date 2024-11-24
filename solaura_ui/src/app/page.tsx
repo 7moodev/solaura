@@ -4,8 +4,7 @@ import WalletAnalyzer from "@/components/wallet-analyzer";
 export default function Home() {
   return (
 <main
-  className="flex min-h-screen flex-col items-center justify-between text-gray-900 dark:text-gray-100 
-  bg-gradient-to-r from-[#9365DB] via-[#3C0753] to-[#4A148C] animate-gradient-x dark:bg-gradient-to-l dark:from-[#1E3A8A] dark:via-[#3C0753] dark:to-[#4A148C]"
+  className="flex min-h-screen flex-col items-center justify-between text-gray-100 dark:text-gray-100 "
 >
       <Header />
       <WalletAnalyzer></WalletAnalyzer>

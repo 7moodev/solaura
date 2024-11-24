@@ -24,7 +24,7 @@ type AnalysisType = {
 
 const badgeStyles: { [key: string]: string } = {
   Good: "bg-green-500 text-white",
-  Suspicious: "bg-orange-500 text-white",
+  Suspicious: "bg-red-500 text-white",
   Neutral: "bg-gray-500 text-white",
 };
 const flagStyles: { [key: string]: string } = {
@@ -89,6 +89,18 @@ export default function AnalysisCard({
           : "bg-white/10 border-white/20"
       }`}
     >
+          {/* Overall Section */}
+          <div className="flex justify-between items-center">
+            <div
+              className={`w-40 h-18 flex items-center justify-center rounded-lg font-bold text-lg ${
+                analysis.overall === "good"
+                  ? badgeStyles.Good
+                  : badgeStyles.Suspicious
+              }`}
+            >
+              {analysis.overall.toUpperCase()}
+            </div>
+          </div>
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
         {analysis.analysis.flags.map((flag, index) => (
@@ -122,19 +134,7 @@ export default function AnalysisCard({
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          {/* Overall Section */}
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-semibold">Overall:</span>
-            <div
-              className={`w-20 h-20 flex items-center justify-center rounded-md font-bold text-lg ${
-                analysis.overall === "good"
-                  ? badgeStyles.Good
-                  : badgeStyles.Suspicious
-              }`}
-            >
-              {analysis.overall.toUpperCase()}
-            </div>
-          </div>
+
 
           {/* Hashes Section */}
 

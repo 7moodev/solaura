@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes"; // Import the theme hook
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import AnalysisCard from "./analysisCard"; // Import the AnalysisCard component
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type AnalysisType = {
   overall: string;
@@ -20,6 +21,7 @@ type AnalysisType = {
 };
 
 export default function WalletAnalyzer() {
+  const { publicKey } = useWallet(); // Fetch wallet connection details
   const [address, setAddress] = useState("");
   const [analysis, setAnalysis] = useState<AnalysisType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,14 @@ export default function WalletAnalyzer() {
     const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; // Solana addresses regex
     return base58Regex.test(address);
   };
+
+  useEffect(() => {
+    // Prefill the input with the connected wallet address if available
+    if (publicKey) {
+      setAddress(publicKey.toBase58());
+    }
+  }, [publicKey]);
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!address) return;
@@ -80,9 +90,7 @@ export default function WalletAnalyzer() {
       }`}
     >
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-2">
-          Solana Wallet Analyzer
-        </h1>
+        <h1 className="text-4xl font-bold mb-2">Solaura Wallet Analyzer</h1>
         <p className="text-xl opacity-80">
           Unlock insights and build trust in the Solana ecosystem
         </p>
@@ -90,6 +98,9 @@ export default function WalletAnalyzer() {
 
       <main className="w-full max-w-4xl mx-auto">
         {/* Form for analysis */}
+        <div className="mb-4 text-center text-gray-300 text-sm">
+          Enter any Solana wallet address to analyze its behavior:
+        </div>
         <form onSubmit={handleSubmit} className="mb-8">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
