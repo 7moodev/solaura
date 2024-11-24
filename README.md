@@ -4,7 +4,8 @@
 
 Solaura is a blockchain-based application designed to analyze Solana wallets and provide insights into their behavior. It allows users to analyze wallet activity, mint NFTs, report suspicious wallets, and share analysis on social media.
 
-<img width="1196" alt="Screenshot 2024-11-24 at 03 43 36" src="https://github.com/user-attachments/assets/74bc0ed1-7880-48bf-95b9-969fd202e21e" >
+<img width="1011" alt="Screenshot 2024-11-24 at 05 23 21" src="https://github.com/user-attachments/assets/b4214d57-ad42-4ec8-8d60-9fdd16c808a3">
+
 <img width="1150" alt="image" src="https://github.com/user-attachments/assets/7cf323f1-b32c-4abe-a195-941915d52905">
 
 ---
