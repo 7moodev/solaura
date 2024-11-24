@@ -62,23 +62,25 @@ export default function AnalysisCard({
   const explorerLink = (hash: string) => `https://solscan.io/tx/${hash}`;
   const { publicKey, signTransaction } = useWallet();
 
+  const isSuperteam = analysis.analysis.flags.includes("superteam-member");
+
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress).then(() => {
-      alert("Wallet address copied to clipboard!"); 
+      alert("Wallet address copied to clipboard!");
     });
   };
+
   const handleMintNFT = async () => {
     if (!publicKey || !signTransaction) {
       alert("Please connect your wallet first.");
       return;
     }
-  
     try {
+      // Establish connection to the Solana blockchain
       const connection = new Connection(
         "https://api.testnet.solana.com",
         "confirmed"
       );
-  
       // Create a transaction to transfer a token (NFT)
       const transaction = new Transaction().add(
         SystemProgram.transfer({
@@ -87,47 +89,35 @@ export default function AnalysisCard({
           lamports: 100000000, // Example: Sending 0.001 SOL
         })
       );
-  
-      // Fetch latest blockhash
-      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-      transaction.recentBlockhash = blockhash;
+      // Set recent blockhash and fee payer
+      transaction.recentBlockhash = (
+        await connection.getLatestBlockhash()
+      ).blockhash;
       transaction.feePayer = publicKey;
-  
-      // Request wallet to sign the transaction
+      // Request the wallet to sign the transaction
       const signedTransaction = await signTransaction(transaction);
-  
       // Send the signed transaction to the blockchain
-      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-  
-      // Confirm the transaction with the new confirmation method
-      const confirmation = await connection.confirmTransaction({
-        signature,
-        blockhash,
-        lastValidBlockHeight,
-      });
-  
-      if (confirmation.value.err) {
-        console.error("Transaction failed:", confirmation.value.err);
-        alert("NFT mint failed. Please try again.");
-      } else {
-        alert(`NFT Minted! Transaction Signature: ${signature}`);
-      }
+      const signature = await connection.sendRawTransaction(
+        signedTransaction.serialize()
+      );
+
+      // Confirm the transaction
+      await connection.confirmTransaction(signature, "confirmed");
+      alert(`NFT Minted! Transaction Signature: ${signature}`);
     } catch (error) {
       console.error("Error minting NFT:", error);
       alert("Failed to mint NFT. Please try again.");
     }
   };
- 
-  const handleReportOnChain = () => {
-    alert("Reported on-chain (dummy functionality).");
-  };
 
   const handleShareToTwitter = () => {
-    const message =
+    let message =
       analysis.overall.toLowerCase() === "good"
         ? "This guy is legit! 🚀"
         : "ALERT! Suspicious wallet! 🚨";
-
+    if(isSuperteam){
+      message = "Superteam Wallet! 🦸"
+    }
     const shareText = `${message} Check out this wallet analysis by Solaura for ${
       "https://solscan.io/account/" + walletAddress
     } 🔍 #Solana #Solaura`;
@@ -137,14 +127,24 @@ export default function AnalysisCard({
 
     window.open(shareUrl, "_blank");
   };
+
   return (
     <Card
-      className={`relative ${
-        isDarkTheme
+      className={`relative transition-all ${
+        isSuperteam
+          ? "border-[5px] border-yellow-600 bg-gradient-to-r from-yellow-300 via-yellow-250 to-yellow-300 shadow-lg animate-pulse"
+          : isDarkTheme
           ? "bg-gray-800 border-gray-700"
           : "bg-white/10 border-white/20"
       }`}
     >
+      {/* Superteam Badge */}
+      {isSuperteam && (
+        <div className="absolute -top-3 -right-3 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
+          Superteam Member
+        </div>
+      )}
+
       {/* Overall Section */}
       <div className="flex justify-between items-center">
         <div
@@ -157,6 +157,7 @@ export default function AnalysisCard({
           {analysis.overall.toUpperCase()}
         </div>
       </div>
+
       {/* Flags Section */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-2">
         {analysis.analysis.flags.map((flag, index) => (
@@ -191,9 +192,7 @@ export default function AnalysisCard({
       <CardContent>
         <div className="grid gap-4">
           {/* Hashes Section */}
-
           {Object.entries(analysis.analysis).map(([key, hashes]) => {
-            // Skip "flags" as it's not a hash type
             if (key === "flags") return null;
 
             return (
@@ -230,29 +229,24 @@ export default function AnalysisCard({
         </div>
         {/* Action Buttons */}
         <div className="mt-6 flex flex-wrap gap-4 justify-end">
-          {/* Mint NFT Button */}
           <button
-            onClick={handleMintNFT}
+            onClick={() => handleMintNFT()}
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
             <ClipboardCopyIcon className="w-5 h-5" />
             Mint NFT from this Analysis
           </button>
-
-          {/* Conditionally render Report button */}
           {analysis.overall.toLowerCase() !== "good" && (
             <button
-              onClick={handleReportOnChain}
+              onClick={() => alert("Report functionality here!")}
               className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
             >
               <ExclamationCircleIcon className="w-5 h-5" />
               Report on Chain
             </button>
           )}
-
-          {/* Share to Twitter Button */}
           <button
-            onClick={handleShareToTwitter}
+            onClick={() => handleShareToTwitter()}
             className="flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800"
           >
             Share to
