@@ -19,6 +19,7 @@ type AnalysisType = {
     rugger: string[];
     [key: string]: string[]; 
   };
+  age: number;
   walletAddress: string;
 };
 
@@ -63,7 +64,7 @@ export default function WalletAnalyzer() {
       const fallback: AnalysisType & { walletAddress: string } = {
         overall: "good",
         analysis: {
-          flags: [ "spammer", "launder", "rugger"],
+          flags: [ "spammer", "launder", "rugger", "superteam-member"],
           degen: [
             "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw",
           ],
@@ -74,6 +75,7 @@ export default function WalletAnalyzer() {
           ],
           rugger:[]
         },
+        age: 10,
         walletAddress: address, 
       };
       setAnalysis((prev) => [...prev, fallback]);

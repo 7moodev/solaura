@@ -32,6 +32,7 @@ type AnalysisType = {
     rugger: string[];
     [key: string]: string[];
   };
+  age: number;
   walletAddress: string;
 };
 
@@ -154,8 +155,8 @@ export default function AnalysisCard({
     >
       {/* Superteam Badge */}
       {isSuperteam && (
-        <div className="absolute -top-5 -right-3 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
-          Superteam Member
+        <div className="absolute -top-5 -right-9 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md">
+          Superteam Member, {analysis.age} days wallet
         </div>
       )}
 
@@ -177,7 +178,7 @@ export default function AnalysisCard({
       )}
 
       {/* Flags Section */}
-      <div className="absolute top-4 right-4 flex flex-wrap gap-2">
+      <div className="absolute top-4 right-4 flex flex-wrap gap-2 items-center">
         {analysis.analysis.flags.map((flag, index) => (
           <Badge
             key={index}
@@ -189,8 +190,20 @@ export default function AnalysisCard({
             {flag}
           </Badge>
         ))}
-      </div>
-
+        {/* Wallet Age Badge */}
+  
+        {!isSuperteam && (
+  <div
+    className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md ${
+      isDarkTheme
+        ? "bg-yellow-500 text-black"
+        : "bg-yellow-100 text-yellow-800 border-yellow-300"
+    }`}
+  >
+    Wallet Age: {analysis.age} days
+  </div>
+)}
+</div>
       {/* Card Content */}
       <CardHeader>
         <CardTitle className="text-2xl">Wallet Analysis of:</CardTitle>
@@ -218,28 +231,28 @@ export default function AnalysisCard({
                 <div className="flex flex-wrap gap-2">
                   <h3 className="text-lg capitalize">{key} TRX:</h3>
                   <div className="flex items-center gap-2 mb-2">
-                  {/* Info Button */}
-                  {["degen", "spammer"].includes(key.toLowerCase()) && (
-                    <div
-                      className="relative"
-                      onMouseEnter={() =>
-                        showTooltip(
-                          key.toLowerCase() === "degen"
-                            ? "These are transactions deemed beneficial or trustworthy."
-                            : "These are flagged as suspicious transactions."
-                        )
-                      }
-                      onMouseLeave={hideTooltip}
-                    >
-                      <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
-                      {tooltip.visible && (
-                        <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
-                          {tooltip.text}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                    {/* Info Button */}
+                    {["degen", "spammer"].includes(key.toLowerCase()) && (
+                      <div
+                        className="relative"
+                        onMouseEnter={() =>
+                          showTooltip(
+                            key.toLowerCase() === "degen"
+                              ? "These are transactions deemed beneficial or trustworthy."
+                              : "These are flagged as suspicious transactions."
+                          )
+                        }
+                        onMouseLeave={hideTooltip}
+                      >
+                        <InformationCircleIcon className="w-5 h-5 text-gray-500 hover:text-gray-300 cursor-pointer" />
+                        {tooltip.visible && (
+                          <div className="absolute z-10 bg-gray-700 text-white text-sm px-3 py-1 rounded-md shadow-lg mt-1">
+                            {tooltip.text}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   {hashes.map((hash, index) => (
                     <Badge
                       key={index}
