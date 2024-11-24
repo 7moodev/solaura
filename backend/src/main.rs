@@ -1,3 +1,4 @@
+use reqwest::Method;
 use serde_json::json;
 use warp::Filter;
 use solana_client::nonblocking::rpc_client;
@@ -7,6 +8,7 @@ use solana_sdk::packet::Meta;
 use solana_sdk::{account, signature, transaction}; // For handling JSON responses
 use std::error::Error;
 use std::fs::File;
+use std::fs::read_to_string;
 use std::cmp::min as Math;
 use std::os::macos::raw;
 use std::string;
@@ -30,15 +32,23 @@ use solana_transaction_status_client_types::{EncodedTransaction, UiAccountsList,
 use std::collections::HashMap;
 use chrono::{NaiveDateTime, Utc, Duration};
 use solana_sdk::vote::state::BlockTimestamp;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Serialize};
 use std::fs;
+use std::env;
+use tokio::task;  // To offload blocking operations
+
 
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let rpc_client = RpcClient::new(env::var("RPC_URL").unwrap());
-    let pubkey = Pubkey::from_str_const("J9RaTBYQ7C8y5ZMfy9zc9Sjnoixik1Bj23wQ26TdTRZt");
-    println!("{}",is_superteam(&rpc_client, pubkey).unwrap());
+    let rpc_client = std::sync::Arc::new(RpcClient::new(env::var("solrpc").unwrap()));
+    let pubkey = Pubkey::from_str_const("GoH45jngWyUf2cpB7LNCm11Dnb2UZ7hTR7c1EijRL6Ne");
+    
+    //run_server().await;
+    println!("{}", is_superteam(rpc_client.clone(), pubkey).await.unwrap());
+    println!("{}", is_degen(&rpc_client, pubkey).unwrap().0);
+    println!("{}", is_degen(&rpc_client, pubkey).unwrap().1);
+    // println!("{}", is_affiliated_with_drainer(&rpc_client, pubkey).unwrap().0);
     Ok(())
 }
 fn fetch_signatures(
@@ -178,9 +188,9 @@ fn fetch_instructions(transaction: EncodedTransaction) -> Vec<String> {
                         let parsed = parsed.clone();
                         for compiled_instruction in &parsed.instructions {
                             match compiled_instruction {
-                                UiInstruction::Compiled(parsed_instruction) => {
+                                UiInstruction::Compiled(_parsed_instruction) => {
                                 }
-                                UiInstruction::Parsed(raw_instruction) => {
+                                UiInstruction::Parsed(_raw_instruction) => {
                               
                                 }
                     }
@@ -229,6 +239,7 @@ fn is_pump_fun_rugger(client: &RpcClient ,pubkey: Pubkey) -> bool{
             } else {
                 for account in token_accounts {
                     println!("{:?}", account.pubkey);
+                    //TODO
                 }
                 return true;
             }
@@ -238,10 +249,45 @@ fn is_pump_fun_rugger(client: &RpcClient ,pubkey: Pubkey) -> bool{
             return false;
         }
     }
+}fn fetch_drainer(rpc_client: &RpcClient, pubkey: Pubkey) -> Result<Vec<DrainContract>, Box<dyn Error>> {
+    let data = fs::read_to_string("../constants.json")?;  // Propagate errors using `?`
+    let contracts: Drain = serde_json::from_str(&data)?; // Propagate errors using `?`
+    Ok(contracts.contract_addresses)  // Return the result as `Ok`
 }
+fn is_degen(rpc_client: &RpcClient, pubkey: Pubkey) -> Result<(bool,Signature), Box<dyn Error>> {
+    let degeneracy = Pubkey::from_str_const("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"); // Use `?` to propagate errors
+    let sigs = fetch_signatures(rpc_client, pubkey);   // Use `?` to propagate errors
+    for sig in sigs {
+            let transaction = fetch_transaction(rpc_client, sig);
+            let accts = fetch_wallet_addresses(transaction);
+            if accts.contains(&degeneracy.to_string()) {
+                return Ok((true,sig));
+            }
+        }
+        Ok((false, Signature::default()))
+    }
+ // Return `Ok(false)` if no match is found
 
-
-fn is_spammer(rpc_client: &RpcClient, pubkey: Pubkey, limit: u16) -> bool {
+fn is_affiliated_with_drainer(rpc_client: &RpcClient, pubkey: Pubkey) -> Result<(bool,Signature), Box<dyn Error>> {
+    let drainers = fetch_drainer(rpc_client, pubkey)?;  // Use `?` to propagate errors
+    let sigs = fetch_signatures(rpc_client, pubkey);
+    for i in 0.. 250.min(sigs.len()) {
+        let sig = sigs[i];
+        let transaction = fetch_transaction(rpc_client, sig);
+        let accts = fetch_wallet_addresses(transaction);
+        for drainer in &drainers {
+            let drainer_pubkey = Pubkey::from_str_const(&drainer.address);
+            if drainer_pubkey.to_string() == pubkey.to_string() {
+                return Ok((true, Signature::default()));
+            }
+            if accts.contains(&drainer_pubkey.to_string()) {
+                return Ok((true,sig));
+            }
+        }
+    }
+    Ok((false, Signature::default())) // Return `Ok(false)` if no match is found
+}
+fn is_spammer(rpc_client: &RpcClient, pubkey: Pubkey, limit: u16) -> (bool, Signature) {
     let sigs = fetch_signatures(&rpc_client, pubkey);
     print!("{:?}", sigs);
     // Limit processing to the number of fetched transactions or specified limit.
@@ -266,11 +312,11 @@ fn is_spammer(rpc_client: &RpcClient, pubkey: Pubkey, limit: u16) -> bool {
         }
         if count_map.values().any(|&count| count >= 5) {
             if pubkey.to_string() == account_addresses[0] {
-                return true;
+                return (true, signature);
             }
         }
     }
-    false // Return false if no spam-like behavior is detected
+    (false, Signature::default()) // Return false if no spam-like behavior is detected
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -291,9 +337,8 @@ struct DrainContract{
 #[derive(Deserialize, Serialize, Debug)]
 struct Drain {
     #[serde(rename = "drain")]
-    contract_addresses: Vec<SuperteamContract>,
+    contract_addresses: Vec<DrainContract>,
 }
-
 fn load_contract_addresses_from_json(file_path: &str) -> Result<HashMap<Pubkey, String>, Box<dyn Error>> {
     let data = fs::read_to_string(file_path)?;
     // Deserialize the JSON into the Contracts struct
@@ -309,10 +354,9 @@ fn load_contract_addresses_from_json(file_path: &str) -> Result<HashMap<Pubkey, 
     }
     Ok(nft_addresses)
 }
-
-fn is_superteam(rpc_client: &RpcClient, pubkey: Pubkey) -> Result<bool, Box<dyn Error>> {
-    // Load and deserialize the JSON file
-    let data = fs::read_to_string("../constants.json")?;
+pub async fn is_superteam(rpc_client: std::sync::Arc<RpcClient>, pubkey: Pubkey) -> Result<bool, Box<dyn Error>> {
+    // Load and deserialize the JSON file asynchronously
+    let data = tokio::fs::read_to_string("../constants.json").await?;
     let contracts: Superteam = serde_json::from_str(&data)?;
 
     // Create a HashMap to store contract addresses and their respective country labels
@@ -324,28 +368,28 @@ fn is_superteam(rpc_client: &RpcClient, pubkey: Pubkey) -> Result<bool, Box<dyn 
         nft_addresses.insert(pubkey_key, contract.country);
     }
 
-    // Iterate through the loaded contract addresses
-    for (contract_address, _country) in &nft_addresses {
-
-        // Check if there are token accounts associated with the given pubkey and contract address
-        let tokens = rpc_client.get_token_accounts_by_owner(&pubkey, TokenAccountsFilter::Mint(*contract_address));
-
-        if let Ok(token_accounts) = tokens {
-            if !token_accounts.is_empty() {
-                for account in token_accounts {
+    // Offload RPC calls to a separate thread to avoid blocking
+    let result = task::spawn_blocking(move || {
+        for (contract_address, _country) in &nft_addresses {
+            let tokens = rpc_client.get_token_accounts_by_owner(&pubkey, TokenAccountsFilter::Mint(*contract_address));
+            
+            if let Ok(token_accounts) = tokens {
+                if !token_accounts.is_empty() {
+                    return true;
                 }
-                return Ok(true);
             }
         }
-    }
-    Ok(false)
+        false
+    }).await?;
+
+    Ok(result)
 }
 
 fn analyse(rpc_client: &RpcClient, wallet: String) -> ResponseData {
     let account = Pubkey::from_str_const(&wallet);
     // Pass rpc_client as a reference to pumpfun
     is_pump_fun_rugger(rpc_client, account);  // Ensure pumpfun accepts &RpcClient
-    let transaction_history = rpc_client.get_signatures_for_address(&account).unwrap();
+    let _transaction_history = rpc_client.get_signatures_for_address(&account).unwrap();
     // println!("{:?}", transaction_history);
     ResponseData {
         status: "success".to_string(),
@@ -353,39 +397,48 @@ fn analyse(rpc_client: &RpcClient, wallet: String) -> ResponseData {
     }
 }
 
-// fn overall(donated:bool, rugged:bool, laundered:bool, spammer:bool, bot:bool)-> String() {
-// }
-async fn run_server() -> () {
+async fn run_server() {
+    // CORS configuration: allow all origins, methods, and headers
+    let cors = warp::cors()
+        .allow_any_origin()
+        .allow_methods(&[warp::http::Method::GET, warp::http::Method::POST])
+        .allow_headers(vec!["Content-Type", "Authorization"]);
+
+    // Route to handle requests
     let npm_message_route = warp::get()
-    .and(warp::query::<std::collections::HashMap<String, String>>()) // Extract query parameters
-    .map( |params: std::collections::HashMap<String, String>| {
-        if let Some(wallet) = params.get("wallet-address") {
-            if wallet.len() != 44 {
-                return warp::reply::json(&json!({
-                    "status": "error",
-                    "message": "Invalid wallet address"
-                }));
+        .and(warp::query::<std::collections::HashMap<String, String>>()) // Extract query parameters
+        .and_then(|params: std::collections::HashMap<String, String>| async move {
+            if let Some(wallet) = params.get("wallet-address") {
+                let rpc_client = std::sync::Arc::new(RpcClient::new(env::var("solrpc").unwrap()));
+                let superteam = is_superteam(rpc_client.clone(), Pubkey::from_str(wallet).unwrap())
+                    .await
+                    .unwrap_or_else(|_| false);
+                let (is_spammer, spam_sig) = is_spammer(&rpc_client, Pubkey::from_str(wallet).unwrap(), 50);
+                let (is_affiliated_with_drainer, sig) = match is_affiliated_with_drainer(&rpc_client, Pubkey::from_str(wallet).unwrap()) {
+                    Ok(result) => result,
+                    Err(_) => (false, Signature::default()),
+                };
+                let overall = "good";
+                // Send a structured JSON response
+                return Ok::<_, warp::Rejection>(warp::reply::json(&json!({
+                    "analysis":{
+                        "flags":[if superteam {"superteam"} else {""}, if is_spammer {"spammer"} else {""}, if is_affiliated_with_drainer {"drainer"} else {""}],
+                    },
+                    "walletAddress": wallet,
+                    "overall": overall,
+                    "age": fetch_wallet_age(&rpc_client, Pubkey::from_str(wallet).unwrap()),
+                })));
             }
-            // do something with the wallet address
-            let rpc_client: RpcClient = RpcClient::new("https://api.mainnet-beta.solana.com");
-            let analysis = analyse(&rpc_client, wallet.clone());
-            print!("{:?}", analysis);
-            // Respond back with a success message
-            return warp::reply::json(&json!({
-                "wallet-address": wallet,
-                "overall": "overall"
-            }));
-        }
-        warp::reply::json(&json!({
-            "status": "error",
-            "message": "No wallet parameter provided"
-        }))
-    });
+            // Error response if 'wallet-address' is missing
+            Ok::<_, warp::Rejection>(warp::reply::json(&json!({
+                "status": "error",
+                "message": "No wallet parameter provided"
+            })))
+        })
+        .with(cors); // Apply CORS to the route
 
-// Start the server on localhost:5000
-
-warp::serve(npm_message_route)
-    .run(([127, 0, 0, 1], 5000)) // Listen on port 5000
-    .await;
-    
+    // Start the server on localhost:5000
+    warp::serve(npm_message_route)
+        .run(([127, 0, 0, 1], 5000)) // Listen on port 5000
+        .await;
 }
