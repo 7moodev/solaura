@@ -34,7 +34,122 @@ export default function WalletAnalyzer() {
     const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; 
     return base58Regex.test(address);
   };
-
+  const dummyData: AnalysisType[] = [
+    {
+      overall: "suspicious",
+      analysis: {
+        flags: ["scammer", "rugger"],
+        degen: ["3Yr7f8qB2LmVQNy5Wp6zLCBBYsQb5NmQF1LtVmGz29Z5"],
+        spammer: [
+          "6Xa4GZv8rKT5CsxF3LMW3Xs8hND6FjNtQRBgFHy9CY9P",
+          "7MxLWLNLnfxwExKo56VFbJhWmRSPMcEqrpDwNZRaPjZr",
+        ],
+        launder: [],
+        rugger: ["8RxpKH5NqrTzWN8CoMeSwzFnZX5DP5s1kT5bwy9LW4Hw"],
+      },
+      age: 30,
+      walletAddress: "DummyWalletAddress3",
+    },
+    {
+      overall: "good",
+      analysis: {
+        flags: ["og", "superteam-member"],
+        degen: [
+          "9LyzMGVkSnTzMC8Va1QsLsRtMShkqQdQxFr4PyVJwL6P",
+          "8TfPMgrFnH5B6VrZTq3EJCBXMXfLpPk4MNL6t9gRzw6k",
+        ],
+        spammer: [],
+        launder: [],
+        rugger: [],
+      },
+      age: 200,
+      walletAddress: "DummyWalletAddress4",
+    },
+    {
+      overall: "suspicious",
+      analysis: {
+        flags: ["degen", "scammer"],
+        degen: [
+          "7JLPCGVXbtWmHKFq7sXt7GxNFVpWTnMz6GmRsKQ5BmLn",
+          "6LV5Kq6JFRkMVyVnTq7X5NpWTPnKwFJw7HpVyGsJqX5R",
+        ],
+        spammer: ["5PRXTyMvVLTJXwqVQwTRqKFLw5MnFyKPJMKPzXVsRm5T"],
+        launder: [],
+        rugger: [],
+      },
+      age: 50,
+      walletAddress: "DummyWalletAddress5",
+    },
+    {
+      overall: "good",
+      analysis: {
+        flags: ["og"],
+        degen: ["4RTM7JGNTPXm5JVLwqX5TFMKF5MTPwqLJF7MzRNKV7XR"],
+        spammer: [],
+        launder: [],
+        rugger: [],
+      },
+      age: 120,
+      walletAddress: "DummyWalletAddress6",
+    },
+    {
+      overall: "suspicious",
+      analysis: {
+        flags: ["degen", "scammer"],
+        degen: [
+          "3QLmVXPKTZMFyqXwMP5LqJVKw5XMpTZLR5RNMZRMJKwP",
+          "9RMLKPVTqXMwJVqXTFqMKLFRMpZqRMXKwF7RMPwLJRMZ",
+        ],
+        spammer: ["6QRMKPLJVRXTqF7MRLKqFMPZJXM5TRMRXFLwPVwMRLT5"],
+        launder: [],
+        rugger: [],
+      },
+      age: 40,
+      walletAddress: "DummyWalletAddress7",
+    },
+    {
+      overall: "good",
+      analysis: {
+        flags: ["superteam-member"],
+        degen: [
+          "8MKPQRM5TZqXRMPwXLJVTFRMJLTP5MKVRZTLP5qRMJX7",
+          "7PLVRMTJMLRTqZMPFqXRMZPVXTLPZMJP7RLMTJP5MKZT",
+        ],
+        spammer: [],
+        launder: [],
+        rugger: [],
+      },
+      age: 300,
+      walletAddress: "DummyWalletAddress8",
+    },
+    {
+      overall: "suspicious",
+      analysis: {
+        flags: ["rugger"],
+        degen: ["4KMRXLVP5ZTqFJVRMLPJMPZT5MRLZKVRMPXRMJXZTLMR"],
+        spammer: [],
+        launder: ["7KMRLTPFRMJZTMRPVZRMTPXMVRMLTPF5KMZRPZT5RMLT"],
+        rugger: ["9MKLRMJPXVRZTLPZTPMLRT5KMVRMZRMKPZT5KVRLPFZJ","7KMRLTPFRMJZTMRPVZRMTPXMVRMLTPF5KMZRPZT5RMLT"],
+      },
+      age: 15,
+      walletAddress: "DummyWalletAddress9",
+    },
+    {
+      overall: "good",
+      analysis: {
+        flags: ["og"],
+        degen: [
+          "7TLM5RMJPXZMKVRPTLZRMPJVLTPFJVLTPRMLKXZRMZML",
+          "4TLMZMRLPXVRMPTF7MRLPXKMZT5MRMPJZRMPTLVRMLTP",
+        ],
+        spammer: [],
+        launder: [],
+        rugger: [],
+      },
+      age: 95,
+      walletAddress: "DummyWalletAddress10",
+    },
+  ];
   useEffect(() => {
     if (publicKey) {
       setAddress(publicKey.toBase58());
@@ -44,41 +159,26 @@ export default function WalletAnalyzer() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!address) return;
-
+  
     setIsLoading(true);
-
+  
     try {
       const response = await fetch(
         `http://localhost:5000/?wallet-address=${encodeURIComponent(address)}`
       );
-
+  
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
+  
       const data: AnalysisType = await response.json();
-      setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]); 
+      setAnalysis((prev) => [...prev, { ...data, walletAddress: address }]);
     } catch (error) {
       console.error("Failed to fetch analysis:", error);
-
-      const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "good",
-        analysis: {
-          flags: [ "spammer", "launder", "rugger", "superteam-member"],
-          degen: [
-            "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw",
-          ],
-          spammer: [
-            "3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2",
-          ],
-          launder: [
-          ],
-          rugger:[]
-        },
-        age: 10,
-        walletAddress: address, 
-      };
-      setAnalysis((prev) => [...prev, fallback]);
+  
+      // Select a random entry from the dummy JSON
+      const randomDummy = dummyData[Math.floor(Math.random() * dummyData.length)];
+      setAnalysis((prev) => [...prev, { ...randomDummy, walletAddress: address }]);
     } finally {
       setIsLoading(false);
     }

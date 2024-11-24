@@ -54,6 +54,7 @@ const getBadgeStyle = (flag: string) => {
   if (flag === "suspicious") return badgeStyles.Suspicious;
   if (flag === "neutral") return badgeStyles.Neutral;
 };
+
 export default function AnalysisCard({
   analysis,
   walletAddress,
@@ -193,15 +194,15 @@ export default function AnalysisCard({
         {/* Wallet Age Badge */}
   
         {!isSuperteam && (
-  <div
-    className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md ${
-      isDarkTheme
-        ? "bg-yellow-500 text-black"
-        : "bg-yellow-100 text-yellow-800 border-yellow-300"
-    }`}
-  >
-    Wallet Age: {analysis.age} days
-  </div>
+          <div
+  className={`absolute -top-9 -right-8 bg-yellow-400 text-black px-3 py-1 text-sm rounded-md font-bold shadow-md whitespace-nowrap ${
+    isDarkTheme
+      ? "bg-yellow-500 text-black"
+      : "bg-yellow-100 text-yellow-800 border-yellow-300"
+  }`}
+>
+  Wallet Age: {analysis.age} days
+</div>
 )}
 </div>
       {/* Card Content */}
