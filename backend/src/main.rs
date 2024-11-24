@@ -44,10 +44,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let rpc_client = std::sync::Arc::new(RpcClient::new(env::var("solrpc").unwrap()));
     let pubkey = Pubkey::from_str_const("GoH45jngWyUf2cpB7LNCm11Dnb2UZ7hTR7c1EijRL6Ne");
     
-    //run_server().await;
-    println!("{}", is_superteam(rpc_client.clone(), pubkey).await.unwrap());
-    println!("{}", is_degen(&rpc_client, pubkey).unwrap().0);
-    println!("{}", is_degen(&rpc_client, pubkey).unwrap().1);
+    run_server().await;
+    // println!("{}", is_superteam(rpc_client.clone(), pubkey).await.unwrap());
+    // println!("{}", is_degen(&rpc_client, pubkey).unwrap().0);
+    // println!("{}", is_degen(&rpc_client, pubkey).unwrap().1);
     // println!("{}", is_affiliated_with_drainer(&rpc_client, pubkey).unwrap().0);
     Ok(())
 }
@@ -356,7 +356,7 @@ fn load_contract_addresses_from_json(file_path: &str) -> Result<HashMap<Pubkey, 
 }
 pub async fn is_superteam(rpc_client: std::sync::Arc<RpcClient>, pubkey: Pubkey) -> Result<bool, Box<dyn Error>> {
     // Load and deserialize the JSON file asynchronously
-    let data = tokio::fs::read_to_string("../constants.json").await?;
+    let data = tokio::fs::read_to_string("constants.json").await?;
     let contracts: Superteam = serde_json::from_str(&data)?;
 
     // Create a HashMap to store contract addresses and their respective country labels
@@ -413,16 +413,17 @@ async fn run_server() {
                 let superteam = is_superteam(rpc_client.clone(), Pubkey::from_str(wallet).unwrap())
                     .await
                     .unwrap_or_else(|_| false);
-                let (is_spammer, spam_sig) = is_spammer(&rpc_client, Pubkey::from_str(wallet).unwrap(), 50);
-                let (is_affiliated_with_drainer, sig) = match is_affiliated_with_drainer(&rpc_client, Pubkey::from_str(wallet).unwrap()) {
-                    Ok(result) => result,
-                    Err(_) => (false, Signature::default()),
-                };
+                let (is_spammer, spam_sig) = is_spammer(&rpc_client, Pubkey::from_str(wallet).unwrap(), 10);
+                // let (is_affiliated_with_drainer, sig) = match is_affiliated_with_drainer(&rpc_client, Pubkey::from_str(wallet).unwrap()) {
+                //     Ok(result) => result,
+                //     Err(_) => (false, Signature::default()),
+                // };
+                // let degen = is_degen(&rpc_client, Pubkey::from_str(wallet).unwrap()).unwrap().0;
                 let overall = "good";
                 // Send a structured JSON response
                 return Ok::<_, warp::Rejection>(warp::reply::json(&json!({
                     "analysis":{
-                        "flags":[if superteam {"superteam"} else {""}, if is_spammer {"spammer"} else {""}, if is_affiliated_with_drainer {"drainer"} else {""}],
+                        "flags":[if superteam {"superteam-member"} else {""}, if is_spammer {"spammer"} else {""}]
                     },
                     "walletAddress": wallet,
                     "overall": overall,
