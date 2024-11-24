@@ -13,8 +13,10 @@ type AnalysisType = {
   overall: string;
   analysis: {
     flags: string[];
-    donor: string[];
-    criminal: string[];
+    degen: string[];
+    spammer: string[];
+    launder: string[];
+    rugger: string[];
     [key: string]: string[]; 
   };
   walletAddress: string;
@@ -59,15 +61,18 @@ export default function WalletAnalyzer() {
       console.error("Failed to fetch analysis:", error);
 
       const fallback: AnalysisType & { walletAddress: string } = {
-        overall: "Suspicious",
+        overall: "good",
         analysis: {
-          flags: ["donor", "criminal", "insider", "jeeter"],
-          donor: [
+          flags: [ "spammer", "launder", "rugger"],
+          degen: [
             "5Lp6rrQXPQkQmTvQrD13AVcEbN7hLu8rgbFrb2DF1m724bmiRkh9TSGaFKNUCVYN7SD5qEUwoZPcWu4JFvMFRwgw",
           ],
-          criminal: [
+          spammer: [
             "3q2M38okq9aHqEyQxDL8MYSNk9ff3uKc4h3iCjpyhyGYjHyvMz1xucpbEzAuaYui1qUYmFqTMM9NkFt6pSJXjXY2",
           ],
+          launder: [
+          ],
+          rugger:[]
         },
         walletAddress: address, 
       };
