@@ -195,13 +195,13 @@ export default function AnalysisCard({
   {/* Wallet Age Badge */}
   {!isSuperteam && (
     <div
-      className={`absolute -top-10 -right-9 bg-yellow-400 text-black px-4 py-1.9 text-base rounded-md font-bold shadow-md whitespace-nowrap ${
+      className={`absolute -top-9 -right-12 bg-yellow-400 text-black px-4 py-1.9 text-base rounded-md font-bold shadow-md whitespace-nowrap ${
         isDarkTheme
           ? "bg-yellow-500 text-black"
           : "bg-yellow-100 text-yellow-800 border-yellow-300"
       }`}
     >
-      Wallet Age: {analysis.age} days
+      Wallet Age: {Math.floor(analysis.age/24)} days
     </div>
   )}
 </div>

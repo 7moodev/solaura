@@ -413,12 +413,12 @@ async fn run_server() {
                 let superteam = is_superteam(rpc_client.clone(), Pubkey::from_str(wallet).unwrap())
                     .await
                     .unwrap_or_else(|_| false);
-                let (is_spammer, spam_sig) = is_spammer(&rpc_client, Pubkey::from_str(wallet).unwrap(), 10);
+                let (is_spammer, spam_sig) = is_spammer(&rpc_client, Pubkey::from_str(wallet).unwrap(), 5);
                 // let (is_affiliated_with_drainer, sig) = match is_affiliated_with_drainer(&rpc_client, Pubkey::from_str(wallet).unwrap()) {
                 //     Ok(result) => result,
                 //     Err(_) => (false, Signature::default()),
                 // };
-                let degen = is_degen(&rpc_client, Pubkey::from_str(wallet).unwrap()).unwrap().0;
+                let degen = false;
                 let overall = "good";
                 let mut flags: Vec<String> = Vec::new();
                 if superteam {
@@ -431,10 +431,10 @@ async fn run_server() {
                     flags.push("spammer".to_string());
                 }
                 // Send a structured JSON response
+                println!("Done analysing wallet: {}", wallet);
                 return Ok::<_, warp::Rejection>(warp::reply::json(&json!({
                     "analysis":{
                         "flags": flags,
-                        "isSpammer": spam_sig,
                     },
                     "walletAddress": wallet,
                     "overall": overall,
